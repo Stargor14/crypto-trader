@@ -2,8 +2,7 @@ import req
 import trader
 
 rsilength = int(input("RSI Length: "))
-
-
+#testing testing 123
 def run():
     posp = 0
     negp = 0
