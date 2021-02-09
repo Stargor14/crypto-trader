@@ -2,7 +2,11 @@ import req
 import trader
 
 rsilength = int(input("RSI Length: "))
-#testing testing 123
+tf = int(input("Time Frame (in seconds): "))
+
+def loop():
+    run()
+
 def run():
     posp = 0
     negp = 0
@@ -22,13 +26,10 @@ def run():
     rsi = 100 - (100/(1+(((posa*(rsilength-1))+(req.prices[1]/req.prices[0]))/((nega*(rsilength-1))+(req.prices[1]/req.prices[0])))))
     print(rsi,req.prices[0], len(req.prices))
     trader.check(rsi)
-    req.run(1)
+    req.run(tf)
     loop()
 
-def loop():
-    run()
-
 while len(req.prices)<req.hlength:
-    req.run(1)
+    req.run(tf)
 if len(req.prices)==req.hlength:
     run()
