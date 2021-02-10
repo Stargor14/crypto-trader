@@ -11,4 +11,3 @@ def openOrder():
 def check(rsi):
     if rsi>=70:
         openOrder()
-#test
