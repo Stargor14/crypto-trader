@@ -11,3 +11,7 @@ def openOrder():
 def check(rsi):
     if rsi>=70:
         openOrder()
+<<<<<<< HEAD
+=======
+yes
+>>>>>>> b7d865978c4bf3f0f0dba5f90c1a49f46deef9c6
