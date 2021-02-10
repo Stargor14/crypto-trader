@@ -1,21 +1,37 @@
 import requests
 import json
 import time
+from binance.client import Client
+
+apikey = "x15G8QtfrUCJG1F7tCahCwyCwxE7a3Mbykg8Q4Uf0Q7QKjB1B3GvCYkfzRUTS96e"
+secretkey = "YyATCoS7OwFFAdaqK3UCw0zZLZoz6RWRqarMrHhGi7P08c7Muay8zDWZfV86SxA5"
+global client
+client = Client(apikey, secretkey)
 
 hlength = 0
+global prices
 prices = []
 
 def run(t):
+    global prices
+    def runinit():
+        global client
+        klines = client.get_klines(symbol='BTCUSDT', interval=Client.KLINE_INTERVAL_1MINUTE,limit=hlength)
+        a = []
+        for i in klines:
+            a.append([i[0],float(i[1]),float(i[4])])
+        return a
     def reqc():
-        r = requests.get("https://api.binance.com/api/v3/ticker/price")
-        j = json.loads(r.text)
-        return j[11]['price']
+        global client
+        kline = client.get_klines(symbol='BTCUSDT', interval=Client.KLINE_INTERVAL_1MINUTE,limit=1)
+        return [kline[0][0], float(kline[0][1]), float(kline[0][4])]
 
-    if len(prices)==hlength:
-        prices.pop(hlength-1)
-        prices.insert(0,float(reqc()))
     if len(prices)!=hlength:
-        prices.insert(0,float(reqc()))
-        print(len(prices))
-
+        prices = runinit()
+    if len(prices)==hlength:
+        if prices[0][0] != reqc()[0]:
+            prices.pop(hlength-1)
+            prices.insert(0,reqc())
+        else:
+            prices[0] = reqc()
     time.sleep(t)
