@@ -33,4 +33,3 @@ while len(req.prices)<req.hlength:
     req.run(tf)
 if len(req.prices)==req.hlength:
     run()
-#asd
