@@ -8,6 +8,7 @@ secretkey = "YyATCoS7OwFFAdaqK3UCw0zZLZoz6RWRqarMrHhGi7P08c7Muay8zDWZfV86SxA5"
 global client
 client = Client(apikey, secretkey)
 
+global hlength
 hlength = 14
 global prices
 prices = []
@@ -16,6 +17,7 @@ def run(t):
     global prices
     def runinit():
         global client
+        global hlength
         klines = client.get_klines(symbol='BTCUSDT', interval=Client.KLINE_INTERVAL_1MINUTE,limit=hlength)
         a = []
         for i in klines:
