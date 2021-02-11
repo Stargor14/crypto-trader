@@ -8,7 +8,7 @@ secretkey = "YyATCoS7OwFFAdaqK3UCw0zZLZoz6RWRqarMrHhGi7P08c7Muay8zDWZfV86SxA5"
 global client
 client = Client(apikey, secretkey)
 
-hlength = 0
+hlength = 14
 global prices
 prices = []
 
@@ -28,6 +28,7 @@ def run(t):
 
     if len(prices)!=hlength:
         prices = runinit()
+
     if len(prices)==hlength:
         if prices[0][0] != reqc()[0]:
             prices.pop(hlength-1)

@@ -13,11 +13,3 @@ def openOrder():
 def check(rsi):
     if rsi>=70:
         openOrder()
-
-'''
-candles = client.get_historical_klines("BTCUSDT", Client.KLINE_INTERVAL_1MINUTE, "1 day ago UTC")
-for i in candles:
-    open = float(i[1])
-    close = float(i[4])
-    print(f"Open: {open} Close: {close} Difference: {close-open} Difference %: {((close/open)-1)*100}")
-'''
