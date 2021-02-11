@@ -23,8 +23,11 @@ def run(t):
         return a
     def reqc():
         global client
-        kline = client.get_klines(symbol='BTCUSDT', interval=Client.KLINE_INTERVAL_1MINUTE,limit=1)
-        return [kline[0][0], float(kline[0][1]), float(kline[0][4])]
+        try:
+            kline = client.get_klines(symbol='BTCUSDT', interval=Client.KLINE_INTERVAL_1MINUTE,limit=1)
+            return [kline[0][0], float(kline[0][1]), float(kline[0][4])]
+        except:
+            return prices[0]
 
     if len(prices)!=hlength:
         prices = runinit()
