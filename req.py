@@ -32,6 +32,7 @@ def run(t):
         if prices[0][0] != reqc()[0]:
             prices.pop(hlength-1)
             prices.insert(0,reqc())
+            print("new candle!")
         if prices[0][0] == reqc()[0]:
             prices[0] = reqc()
     time.sleep(t)
