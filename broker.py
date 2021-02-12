@@ -2,9 +2,11 @@ import requests
 import json
 from binance.client import Client
 
+with open('Z:\github/keys.json') as f:
+  data = json.load(f)
 
-apikey = "x15G8QtfrUCJG1F7tCahCwyCwxE7a3Mbykg8Q4Uf0Q7QKjB1B3GvCYkfzRUTS96e"
-secretkey = "YyATCoS7OwFFAdaqK3UCw0zZLZoz6RWRqarMrHhGi7P08c7Muay8zDWZfV86SxA5"
+apikey = data['public']
+secretkey = data['secret']
 
 short = 's'
 long = 'l'
