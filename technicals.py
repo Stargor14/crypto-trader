@@ -20,17 +20,20 @@ rsilength = int(input("rsi length: "))
 devlength = int(input("standard deviation length: "))
 tf = int(input("input speed: "))
 
+global row
+row = 2
 def rsi():
+    global row
     prices = req.prices
     g = []
     l = []
     gs = 0
     ls = 0
     for i in range(rsilength):
-        if prices[i][2]-prices[i][1]>0:
-            g.append(prices[i][2]-prices[i][1])
-        if prices[i][2]-prices[i][1]<=0:
-            l.append(prices[i][2]-prices[i][1])
+        if prices[i+row-2]['close']-prices[i+row-2]['open']>0:
+            g.append(prices[i+row-2]['close']-prices[i+row-2]['open'])
+        if prices[i+row-2]['close']-prices[i+row-2]['open']<=0:
+            l.append(prices[i+row-2]['close']-prices[i+row-2]['open'])
     for i in g:
         gs+=i
     for i in l:
@@ -43,28 +46,45 @@ def rsi():
         al = 1
     rs = ag/al
     rsi = round((100 - (100/(1+rs))),2)
-    rsiL = [[round(rsi,2)]]
-    Jrsi = {"values":rsiL}
-
-    sheet.values().update(spreadsheetId=SPREADSHEET_ID,range=f'B{2}',valueInputOption='USER_ENTERED',body=Jrsi).execute()
-    print(f"rsi: {rsi}") #ADD GOOGLE SPREADSHEET FUNCTIONALITY HERE, WILL WRITE RSI VALUE EVERY CANDLE TO SPREADSHEET
+    #print(f"rsi: {rsi}") #ADD GOOGLE SPREADSHEET FUNCTIONALITY HERE, WILL WRITE RSI VALUE EVERY CANDLE TO SPREADSHEET
     return rsi
 
 def dev():
+    global row
     prices = req.prices
     sum=0
     for i in range(devlength):
-        sum+=prices[i][2]
+        sum+=prices[i+row-2]['close']
     diffsum=0
     for i in range(devlength):
-        diffsum+=(prices[i][2]-sum/devlength)**2
+        diffsum+=(prices[i+row-2]['close']-sum/devlength)**2
     dev = math.sqrt(diffsum/devlength)
     #print(f"dev: {dev}")
     return dev
 
 def run():
-    while True:
+    global row
+    while row<=1000:
         prices = req.prices
+        rsiL = [[round(rsi(),2)]]
+        Jrsi = {"values":rsiL}
+        openL = [[prices[row-2]['open']]]
+        Jopen = {"values":openL}
+        closeL = [[prices[row-2]['close']]]
+        Jclose = {"values":closeL}
+        lowL = [[prices[row-2]['low']]]
+        Jlow = {"values":lowL}
+        highL = [[prices[row-2]['high']]]
+        Jhigh = {"values":highL}
+
+        sheet.values().update(spreadsheetId=SPREADSHEET_ID,range=f'A{row}',valueInputOption='USER_ENTERED',body=Jtime).execute()
+        sheet.values().update(spreadsheetId=SPREADSHEET_ID,range=f'B{row}',valueInputOption='USER_ENTERED',body=Jrsi).execute()
+        sheet.values().update(spreadsheetId=SPREADSHEET_ID,range=f'C{row}',valueInputOption='USER_ENTERED',body=Jopen).execute()
+        sheet.values().update(spreadsheetId=SPREADSHEET_ID,range=f'D{row}',valueInputOption='USER_ENTERED',body=Jclose).execute()
+        sheet.values().update(spreadsheetId=SPREADSHEET_ID,range=f'E{row}',valueInputOption='USER_ENTERED',body=Jlow).execute()
+        sheet.values().update(spreadsheetId=SPREADSHEET_ID,range=f'F{row}',valueInputOption='USER_ENTERED',body=Jhigh).execute()
+
+        row+=1
         analysis.run(prices,rsi(),dev())
         req.run(tf)
 
