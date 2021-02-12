@@ -9,11 +9,20 @@ apikey = data['public']
 secretkey = data['secret']
 
 client = Client(apikey, secretkey)
-
+global profit
+profit = 0
+global tradesum
+tradesum = 0
 def long(en):
     print(f"Entered LONG at: {en}")
+    #long function
 def short(en):
     print(f"Entered SHORT at: {en}")
+    #short function
 def close(ex,pnl):
+    global profit
+    global tradesum
+    tradesum +=1
+    profit+=pnl-.15
     print(f"CLOSED at: {ex} with pNl of: {pnl}")
-#add json recording of profits here
+    print(f"Total pNl: {profit} Total trades: {tradesum}")
