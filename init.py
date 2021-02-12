@@ -1,2 +1,2 @@
 import req
-import analysis #loads hlength amount of candles
+import technicals #loads hlength amount of candles

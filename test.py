@@ -1,4 +1,10 @@
-orderbook = {'buy price': 1000, 'sell price':1100, "qty":100}
-def calc(book):
-    return (book['sell price']-book['buy price'])*book['qty']
-print(calc(orderbook))
+import math
+prices=[]
+sum=0
+for price in prices:
+    sum+=price
+diffsum=0
+for price in prices:
+    diffsum+=(price-sum/len(prices))**2
+var = math.sqrt(diffsum/len(prices))
+print(var)
