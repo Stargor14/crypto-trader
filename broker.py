@@ -8,15 +8,12 @@ with open('Z:\github/keys.json') as f:
 apikey = data['public']
 secretkey = data['secret']
 
-short = 's'
-long = 'l'
-close = 'c'
-
 client = Client(apikey, secretkey)
 
-def long():
-    pass
-def short():
-    pass
-def close():
-    pass
+def long(en):
+    print(f"Entered LONG at: {en}")
+def short(en):
+    print(f"Entered SHORT at: {en}")
+def close(ex,pnl):
+    print(f"CLOSED at: {ex} with pNl of: {pnl}")
+#add json recording of profits here

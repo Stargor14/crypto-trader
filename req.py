@@ -3,13 +3,16 @@ import json
 import time
 from binance.client import Client
 
-apikey = "x15G8QtfrUCJG1F7tCahCwyCwxE7a3Mbykg8Q4Uf0Q7QKjB1B3GvCYkfzRUTS96e"
-secretkey = "YyATCoS7OwFFAdaqK3UCw0zZLZoz6RWRqarMrHhGi7P08c7Muay8zDWZfV86SxA5"
+with open('Z:\github/keys.json') as f:
+  data = json.load(f)
+
+apikey = data['public']
+secretkey = data['secret']
 global client
 client = Client(apikey, secretkey)
 
 global hlength
-hlength = 15
+hlength = int(input("history length: "))
 global prices
 prices = []
 

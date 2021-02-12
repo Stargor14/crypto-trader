@@ -1,10 +1,24 @@
 import req
-import trader
 import analysis
 import math
+from google.oauth2 import service_account
+from googleapiclient.discovery import build
+from google_auth_oauthlib.flow import InstalledAppFlow
+from google.auth.transport.requests import Request
 
-rsilength = 15
-tf = 1
+SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
+SERVICE_ACCOUNT_FILE = 'Z:\github\skeys.json'
+SPREADSHEET_ID = '1z0_KbA4kywx0P6K08PaK0oCaeRkpts1RO-si7BpFUvs'
+
+credentials = None
+credentials = service_account.Credentials.from_service_account_file(
+        SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+service = build('sheets', 'v4', credentials=credentials)
+sheet = service.spreadsheets()
+
+rsilength = int(input("rsi length: "))
+devlength = int(input("standard deviation length: "))
+tf = int(input("input speed: "))
 
 def rsi():
     prices = req.prices
@@ -29,19 +43,23 @@ def rsi():
         al = 1
     rs = ag/al
     rsi = round((100 - (100/(1+rs))),2)
-    print(f"rsi {rsi}")
+    rsiL = [[round(rsi,2)]]
+    Jrsi = {"values":rsiL}
+
+    sheet.values().update(spreadsheetId=SPREADSHEET_ID,range=f'B{2}',valueInputOption='USER_ENTERED',body=Jrsi).execute()
+    print(f"rsi: {rsi}") #ADD GOOGLE SPREADSHEET FUNCTIONALITY HERE, WILL WRITE RSI VALUE EVERY CANDLE TO SPREADSHEET
     return rsi
 
 def dev():
     prices = req.prices
     sum=0
-    for price in prices:
-        sum+=price[2]
+    for i in range(devlength):
+        sum+=prices[i][2]
     diffsum=0
-    for price in prices:
-        diffsum+=(price[2]-sum/len(prices))**2
-    dev = math.sqrt(diffsum/len(prices))
-    #print(f"dev {dev}")
+    for i in range(devlength):
+        diffsum+=(prices[i][2]-sum/devlength)**2
+    dev = math.sqrt(diffsum/devlength)
+    #print(f"dev: {dev}")
     return dev
 
 def run():
