@@ -12,7 +12,7 @@ global exit
 inTrade = False
 inShort = False
 inLong = False
-stopLoss = -1*(float(input("Stop Loss%: ")))
+stopLoss = float(input("Stop Loss%: "))
 takeProfit = float(input("takeProfit%: "))
 entry = 1
 exit = 1
@@ -30,12 +30,12 @@ def run(prices,rsi,dev,row):
     ccdiff = prices[row]['close']-prices[row]['open'] #current difference
 
     if inTrade == False: #open conditions go here
-        if rsi>=70 and cdiff<0 and ccdiff<cdiff: #accleerating downward
+        if rsi>=80 and ccdiff<0: #accleerating downward
             entry = prices[row]['close']
             broker.short(entry)
             inTrade = True
             inShort = True
-        if rsi<=30 and cdiff>0 and ccdiff>cdiff: #accelerating upward
+        if rsi<=26 and ccdiff>0: #accelerating upward
             entry = prices[row]['close']
             broker.long(entry)
             inTrade = True
@@ -47,14 +47,18 @@ def run(prices,rsi,dev,row):
             if pNl>=takeProfit:
                 broker.close(exit,pNl)
                 inTrade = False
+                inShort = False
             if pNl<=stopLoss:
                 broker.close(exit,pNl)
                 inTrade = False
+                inShort = False
         if inLong == True:
             pNl = (exit/entry-1)*100 #full %: 1%, -2% 5% is 1, -2, 5
             if pNl>=takeProfit:
                 broker.close(exit,pNl)
                 inTrade = False
+                inLong = False
             if pNl<=stopLoss:
                 broker.close(exit,pNl)
                 inTrade = False
+                inLong = False

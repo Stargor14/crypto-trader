@@ -27,7 +27,6 @@ def run(t):
         a = []
         for i in klines:
             a.append({"time":i[0], "open":float(i[1]), "close":float(i[4]),"low":float(i[3]), "high":float(i[2])})
-        #print(a)
         return a
 
     def reqc():
@@ -41,7 +40,7 @@ def run(t):
     def reqold():
         global client
 
-    if runs<100:
+    if runs<1:
         prices+=runinit()
         runs+=1
     '''
