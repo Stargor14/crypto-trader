@@ -28,7 +28,7 @@ def rsi():
     if al == 0:
         al = 1
     rs = ag/al
-    rsi = (100 - (100/(1+rs)))
+    rsi = round((100 - (100/(1+rs))),2)
     print(f"rsi {rsi}")
     return rsi
 
@@ -41,12 +41,13 @@ def dev():
     for price in prices:
         diffsum+=(price[2]-sum/len(prices))**2
     dev = math.sqrt(diffsum/len(prices))
-    print(f"dev {dev}")
+    #print(f"dev {dev}")
     return dev
 
 def run():
     while True:
-        analysis.run(rsi(),dev())
+        prices = req.prices
+        analysis.run(prices,rsi(),dev())
         req.run(tf)
 
 req.run(tf)

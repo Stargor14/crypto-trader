@@ -1,4 +1,5 @@
 import trader
-def run(rsi,dev):
-    #check technicals for trade signals
-    pass
+def run(prices,rsi,dev):
+    if rsi>=80:
+        trader.short(prices[0][2])
+    if rsi<

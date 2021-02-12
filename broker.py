@@ -12,6 +12,9 @@ close = 'c'
 
 client = Client(apikey, secretkey)
 
-def openOrder(ordertype):
-    if ordertype == short:
-        print("shorted")
+def long():
+    pass
+def short():
+    pass
+def close():
+    pass

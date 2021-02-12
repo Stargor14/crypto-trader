@@ -22,13 +22,13 @@ def run(t):
         a = []
         for i in klines:
             a.append([i[0],float(i[1]),float(i[4])])
-        print(a)
+        #print(a)
         return a
     def reqc():
         global client
         try:
             kline = client.get_klines(symbol='BTCUSDT', interval=Client.KLINE_INTERVAL_1MINUTE,limit=1)
-            print(f"open {kline[0][1]} close {kline[0][4]}")
+            #8print(f"open {kline[0][1]} close {kline[0][4]}")
             return [kline[0][0], float(kline[0][1]), float(kline[0][4])]
         except:
             return prices[0]
