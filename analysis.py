@@ -62,21 +62,21 @@ def run(prices,rsi,dev,row):
             exit = prices[row]['low']
             pNl = -1*((exit/entry-1)*100) #reversed for short
             if pNl>=takeProfit:
-                broker.close(exit,pNl)
+                broker.close(exit,takeProfit)
                 inTrade = False
                 inShort = False
             if pNl<=stopLoss:
-                broker.close(exit,pNl)
+                broker.close(exit,stopLoss)
                 inTrade = False
                 inShort = False
         if inLong == True:
             exit = prices[row]['high']
             pNl = (exit/entry-1)*100 #full %: 1%, -2% 5% is 1, -2, 5
             if pNl>=takeProfit:
-                broker.close(exit,pNl)
+                broker.close(exit,takeProfit)
                 inTrade = False
                 inLong = False
             if pNl<=stopLoss:
-                broker.close(exit,pNl)
+                broker.close(exit,stopLoss)
                 inTrade = False
                 inLong = False

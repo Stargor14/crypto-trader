@@ -23,6 +23,6 @@ def close(ex,pnl):
     global profit
     global tradesum
     tradesum +=1
-    profit+=pnl-.15
-    print(f"CLOSED at: {ex} with pNl of: {pnl-.15}")
+    profit+=pnl-.08
+    print(f"CLOSED at: {ex} with pNl of: {pnl-.08}")
     print(f"Total pNl: {profit} Total trades: {tradesum}")
