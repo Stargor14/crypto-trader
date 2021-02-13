@@ -36,14 +36,18 @@ def run(prices,rsi):
     global exit
     global primeds
     global primedl
-    diff2 = prices[2]['close']-prices[2]['open'] # difference 2 candles ago
-    diff1 = prices[1]['close']-prices[1]['open'] #difference 1 candle ago
-    diff = prices[0]['close']-prices[0]['open'] #current difference
+    diff2s = prices[2]['low']-prices[2]['open'] # difference 2 candles ago
+    diff1s = prices[1]['low']-prices[1]['open'] #difference 1 candle ago
+    diffs = prices[0]['close']-prices[0]['open'] #current difference
+    diff2l = prices[2]['high']-prices[2]['open'] # difference 2 candles ago
+    diff1l = prices[1]['high']-prices[1]['open'] #difference 1 candle ago
+    diffl = prices[0]['close']-prices[0]['open'] #current difference
 
     if inTrade == False: #open conditions go here
         if rsi>=80:
             primeds = True
-        if primeds == True and diff1<-20 and diff<-20:
+            print("Primed for short!")
+        if primeds == True and diff1s<-50 and diffs<-50:
             entry = prices[0]['close']
             broker.short(entry,prices,rsi)
             inTrade = True
@@ -51,7 +55,8 @@ def run(prices,rsi):
             primeds = False
         if rsi<=30:
             primedl = True
-        if primedl == True and diff1>20 and diff>20:
+            print("Primed for long!")
+        if primedl == True and diff1l>50 and diffl>50:
             entry = prices[0]['close']
             broker.long(entry,prices,rsi)
             inTrade = True
