@@ -41,6 +41,9 @@ def close(ex,pnl,prices,rsi):
     record(prices,rsi,"close",pnl)
 
 def record(prices,rsi,type,pnl):
+    with open('Z:\github/row.json','r') as f:
+      data = json.load(f)
+    row = data['row']
     timeL = [[prices[0]['time']]]
     Jtime = {"values":timeL}
     rsiL = [[round(rsi,2)]]
@@ -58,3 +61,5 @@ def record(prices,rsi,type,pnl):
     if type == "close":
         sheet.values().update(spreadsheetId=SPREADSHEET_ID,range=f'E{row}',valueInputOption='USER_ENTERED',body=Jpnl).execute()
     row+=1
+    with open('Z:\github/row.json','w') as f:
+      json.dump({"row":row})

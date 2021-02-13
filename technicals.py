@@ -2,7 +2,6 @@ import req
 import analysis
 import math
 
-
 rsilength = 14
 devlength = 100
 
