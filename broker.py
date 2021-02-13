@@ -1,42 +1,60 @@
 import requests
 import json
 from binance.client import Client
+from google.oauth2 import service_account
+from googleapiclient.discovery import build
+from google_auth_oauthlib.flow import InstalledAppFlow
+from google.auth.transport.requests import Request
+
+SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
+SERVICE_ACCOUNT_FILE = 'Z:\github\skeys.json'
+SPREADSHEET_ID = '1z0_KbA4kywx0P6K08PaK0oCaeRkpts1RO-si7BpFUvs'
+
+credentials = None
+credentials = service_account.Credentials.from_service_account_file(
+        SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+service = build('sheets', 'v4', credentials=credentials)
+global sheet
+sheet = service.spreadsheets()
 
 with open('Z:\github/keys.json') as f:
   data = json.load(f)
 
 apikey = data['public']
 secretkey = data['secret']
-
+global client
 client = Client(apikey, secretkey)
-global profit
-profit = 0
-global tradesum
-tradesum = 0
+
 def long(en,prices,rsi):
     print(f"Entered LONG at: {en}")
     #long function
-    record(prices,rsi,"short")
+    record(prices,rsi,"long",0)
+
 def short(en,prices,rsi):
     print(f"Entered SHORT at: {en}")
     #short function
-    record(prices,rsi,"short")
+    record(prices,rsi,"short",0)
+
 def close(ex,pnl,prices,rsi):
-    global profit
-    global tradesum
-    tradesum +=1
-    profit+=pnl-.08
     print(f"CLOSED at: {ex} with pNl of: {pnl}")
-    print(f"Total pNl: {profit} Total trades: {tradesum}")
-    record(prices,rsi,"close")
-def record(prices,rsi,type):
+    #close function
+    record(prices,rsi,"close",pnl)
+
+def record(prices,rsi,type,pnl):
+    timeL = [[prices[0]['time']]]
+    Jtime = {"values":timeL}
+    rsiL = [[round(rsi,2)]]
+    Jrsi = {"values":rsiL}
+    closeL = [[prices[0]['close']]]
+    Jclose = {"values":closeL}
+    typeL = [[type]]
+    Jtype = {"values":typeL}
+    pnlL = [[pnl]]
+    Jpnl = {"values":pnlL}
+    sheet.values().update(spreadsheetId=SPREADSHEET_ID,range=f'A{row}',valueInputOption='USER_ENTERED',body=Jtime).execute()
+    sheet.values().update(spreadsheetId=SPREADSHEET_ID,range=f'B{row}',valueInputOption='USER_ENTERED',body=Jrsi).execute()
+    sheet.values().update(spreadsheetId=SPREADSHEET_ID,range=f'C{row}',valueInputOption='USER_ENTERED',body=Jclose).execute()
+    sheet.values().update(spreadsheetId=SPREADSHEET_ID,range=f'D{row}',valueInputOption='USER_ENTERED',body=Jtype).execute()
     if type == "close":
-        timeL = [[prices[row-2]['time']]]
-        Jtime = {"values":timeL}
-        rsiL = [[round(rsi,2)]]
-        Jrsi = {"values":rsiL}
-        closeL = [[prices[row-2]['close']]]
-        Jclose = {"values":closeL}
-        sheet.values().update(spreadsheetId=SPREADSHEET_ID,range=f'A{row}',valueInputOption='USER_ENTERED',body=Jtime).execute()
-        sheet.values().update(spreadsheetId=SPREADSHEET_ID,range=f'B{row}',valueInputOption='USER_ENTERED',body=Jrsi).execute()
-        sheet.values().update(spreadsheetId=SPREADSHEET_ID,range=f'D{row}',valueInputOption='USER_ENTERED',body=Jclose).execute()
+        sheet.values().update(spreadsheetId=SPREADSHEET_ID,range=f'E{row}',valueInputOption='USER_ENTERED',body=Jpnl).execute()
+    row+=1
