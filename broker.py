@@ -13,16 +13,30 @@ global profit
 profit = 0
 global tradesum
 tradesum = 0
-def long(en):
+def long(en,prices,rsi):
     print(f"Entered LONG at: {en}")
     #long function
-def short(en):
+    record(prices,rsi,"short")
+def short(en,prices,rsi):
     print(f"Entered SHORT at: {en}")
     #short function
-def close(ex,pnl):
+    record(prices,rsi,"short")
+def close(ex,pnl,prices,rsi):
     global profit
     global tradesum
     tradesum +=1
-    profit+=pnl-.15
+    profit+=pnl-.08
     print(f"CLOSED at: {ex} with pNl of: {pnl}")
     print(f"Total pNl: {profit} Total trades: {tradesum}")
+    record(prices,rsi,"close")
+def record(prices,rsi,type):
+    if type == "close":
+        timeL = [[prices[row-2]['time']]]
+        Jtime = {"values":timeL}
+        rsiL = [[round(rsi,2)]]
+        Jrsi = {"values":rsiL}
+        closeL = [[prices[row-2]['close']]]
+        Jclose = {"values":closeL}
+        sheet.values().update(spreadsheetId=SPREADSHEET_ID,range=f'A{row}',valueInputOption='USER_ENTERED',body=Jtime).execute()
+        sheet.values().update(spreadsheetId=SPREADSHEET_ID,range=f'B{row}',valueInputOption='USER_ENTERED',body=Jrsi).execute()
+        sheet.values().update(spreadsheetId=SPREADSHEET_ID,range=f'D{row}',valueInputOption='USER_ENTERED',body=Jclose).execute()
