@@ -20,7 +20,6 @@ sheet = service.spreadsheets()
 
 rsilength = int(input("rsi length: "))
 devlength = int(input("standard deviation length: "))
-tf = int(input("input speed: "))
 
 global row
 row = 0
@@ -66,7 +65,6 @@ def dev():
 
 def run():
     global row
-
     prices = req.prices
     while row<=len(prices)-20:
         '''
@@ -91,7 +89,7 @@ def run():
         '''
         analysis.run(prices,rsi(),dev(),row)
         row+=1
-        req.run(tf)
+        req.run()
 
-req.run(tf)
+req.run()
 run()

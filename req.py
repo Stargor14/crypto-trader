@@ -17,7 +17,7 @@ global prices
 prices = []
 global runs
 runs = 0
-def run(t):
+def run():
     global prices
     global runs
     def runinit():
@@ -40,7 +40,7 @@ def run(t):
     def reqold():
         global client
         global prices
-        backtime = 1613171530000-28800000000
+        backtime = 1613171530000-2400000000
         klines = client.get_historical_klines("BTCUSDT", Client.KLINE_INTERVAL_1MINUTE,str(backtime))
         a = []
         for i in klines:
