@@ -48,7 +48,6 @@ def run():
     while True:
         prices = req.prices
         analysis.run(prices,rsi())
-        print(rsi())
         req.run()
 req.run()
 run()
