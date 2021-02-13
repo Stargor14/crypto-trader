@@ -43,7 +43,7 @@ def run(prices,rsi):
     if inTrade == False: #open conditions go here
         if rsi>=80:
             primeds = True
-        if primeds == True and diff<-50 and diff1<-50:
+        if primeds == True and diff1<-20 and diff<-20:
             entry = prices[0]['close']
             broker.short(entry,prices,rsi)
             inTrade = True
@@ -51,7 +51,7 @@ def run(prices,rsi):
             primeds = False
         if rsi<=30:
             primedl = True
-        if primedl == True and diff1>50 and diff>50:
+        if primedl == True and diff1>20 and diff>20:
             entry = prices[0]['close']
             broker.long(entry,prices,rsi)
             inTrade = True

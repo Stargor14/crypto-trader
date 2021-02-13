@@ -12,6 +12,7 @@ global client
 client = Client(apikey, secretkey)
 
 global hlength
+hlength = 20
 global prices
 prices = []
 global runs
@@ -26,23 +27,22 @@ def run():
         a = []
         for i in klines:
             a.append({"time":i[0], "open":float(i[1]), "close":float(i[4]),"low":float(i[3]), "high":float(i[2])})
-            print(f"Time: {i[0]}")
         return a
     def reqc():
         global client
         try:
             kline = client.get_klines(symbol='BTCUSDT', interval=Client.KLINE_INTERVAL_1MINUTE,limit=1)
-            print(f"Open: {kline[0][1]} Close: {kline[0][4]}")
             return {"time":kline[0][0], "open":float(kline[0][1]), "close":float(kline[0][4]),"low":float(kline[0][4]), "high":float(kline[0][4])}
         except:
             return prices[0]
     if len(prices)==0:
-        prices=runinit()
+        prices=list(reversed(runinit()))
     if len(prices)==hlength:
         if prices[0]['time'] != reqc()['time']:
             prices.pop(hlength-1)
             prices.insert(0,reqc())
-            print("New Candle!")
-        if prices[0]['time'] == reqc()['time']:
+            print(f"Closed Candle! Close {prices[1]['close']}")
+            print(f"New Candle! Open: {prices[0]['open']}")
+        else:
             prices[0] = reqc()
     time.sleep(1)

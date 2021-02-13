@@ -5,8 +5,6 @@ import math
 rsilength = 14
 devlength = 100
 
-global row
-row = 0
 def rsi():
     global row
     prices = req.prices
@@ -16,7 +14,7 @@ def rsi():
     ls = 0
     for i in range(rsilength):
         if prices[i]['close']-prices[i]['open']>0:
-            g.append(prices[i+row]['close']-prices[i+row]['open'])
+            g.append(prices[i]['close']-prices[i]['open'])
         if prices[i]['close']-prices[i]['open']<=0:
             l.append(prices[i]['close']-prices[i]['open'])
     for i in g:
@@ -47,10 +45,10 @@ def dev():
 
 def run():
     global row
-    prices = req.prices
-    analysis.run(prices,rsi())
-    row+=1
-    req.run()
-
+    while True:
+        prices = req.prices
+        analysis.run(prices,rsi())
+        print(rsi())
+        req.run()
 req.run()
 run()
