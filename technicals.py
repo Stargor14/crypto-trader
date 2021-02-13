@@ -30,10 +30,10 @@ def rsi():
     gs = 0
     ls = 0
     for i in range(rsilength):
-        if prices[i+row]['close']-prices[i+row]['open']>0:
+        if prices[i]['close']-prices[i]['open']>0:
             g.append(prices[i+row]['close']-prices[i+row]['open'])
-        if prices[i+row]['close']-prices[i+row]['open']<=0:
-            l.append(prices[i+row]['close']-prices[i+row]['open'])
+        if prices[i]['close']-prices[i]['open']<=0:
+            l.append(prices[i]['close']-prices[i]['open'])
     for i in g:
         gs+=i
     for i in l:
@@ -54,10 +54,10 @@ def dev():
     prices = req.prices
     sum=0
     for i in range(devlength):
-        sum+=prices[i+row-2]['close']
+        sum+=prices[i]['close']
     diffsum=0
     for i in range(devlength):
-        diffsum+=(prices[i+row-2]['close']-sum/devlength)**2
+        diffsum+=(prices[i]['close']-sum/devlength)**2
     dev = math.sqrt(diffsum/devlength)
     #print(f"dev: {dev}")
     return dev
