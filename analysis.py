@@ -1,6 +1,5 @@
 import broker
 import json
-
 global inTrade
 global inShort
 global inLong
