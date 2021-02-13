@@ -39,9 +39,16 @@ def run(t):
             return prices[0]
     def reqold():
         global client
-
+        global prices
+        backtime = 1613171530000-28800000000
+        klines = client.get_historical_klines("BTCUSDT", Client.KLINE_INTERVAL_1MINUTE,str(backtime))
+        a = []
+        for i in klines:
+            a.append({"time":i[0], "open":float(i[1]), "close":float(i[4]),"low":float(i[3]), "high":float(i[2])})
+        return a
     if runs<1:
-        prices+=runinit()
+        prices=reqold()
+        print(len(prices))
         runs+=1
     '''
     if len(prices)==hlength:

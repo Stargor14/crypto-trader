@@ -68,34 +68,30 @@ def run():
     global row
 
     prices = req.prices
-    with open('testing.csv', mode='w') as file:
-        file_writer = csv.writer(file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-        while row<=len(prices)-20:
-            '''
-            timeL = [[prices[row-2]['time']]]
-            Jtime = {"values":timeL}
-            rsiL = [[round(rsi(),2)]]
-            Jrsi = {"values":rsiL}
-            openL = [[prices[row-2]['open']]]
-            Jopen = {"values":openL}
-            closeL = [[prices[row-2]['close']]]
-            Jclose = {"values":closeL}
-            lowL = [[prices[row-2]['low']]]
-            Jlow = {"values":lowL}
-            highL = [[prices[row-2]['high']]]
-            Jhigh = {"values":highL}
-            sheet.values().update(spreadsheetId=SPREADSHEET_ID,range=f'A{row}',valueInputOption='USER_ENTERED',body=Jtime).execute()
-            sheet.values().update(spreadsheetId=SPREADSHEET_ID,range=f'B{row}',valueInputOption='USER_ENTERED',body=Jrsi).execute()
-            sheet.values().update(spreadsheetId=SPREADSHEET_ID,range=f'C{row}',valueInputOption='USER_ENTERED',body=Jopen).execute()
-            sheet.values().update(spreadsheetId=SPREADSHEET_ID,range=f'D{row}',valueInputOption='USER_ENTERED',body=Jclose).execute()
-            sheet.values().update(spreadsheetId=SPREADSHEET_ID,range=f'E{row}',valueInputOption='USER_ENTERED',body=Jlow).execute()
-            sheet.values().update(spreadsheetId=SPREADSHEET_ID,range=f'F{row}',valueInputOption='USER_ENTERED',body=Jhigh).execute()
-            '''
-            file_writer.writerow([prices[row-2]['time'],prices[row-2]['open'],prices[row-2]['close'],prices[row-2]['low'],prices[row-2]['high'],rsi(),analysis.run(prices,rsi(),dev(),row)])
-            row+=1
-            req.run(tf)
+    while row<=len(prices)-20:
+        '''
+        timeL = [[prices[row-2]['time']]]
+        Jtime = {"values":timeL}
+        rsiL = [[round(rsi(),2)]]
+        Jrsi = {"values":rsiL}
+        openL = [[prices[row-2]['open']]]
+        Jopen = {"values":openL}
+        closeL = [[prices[row-2]['close']]]
+        Jclose = {"values":closeL}
+        lowL = [[prices[row-2]['low']]]
+        Jlow = {"values":lowL}
+        highL = [[prices[row-2]['high']]]
+        Jhigh = {"values":highL}
+        sheet.values().update(spreadsheetId=SPREADSHEET_ID,range=f'A{row}',valueInputOption='USER_ENTERED',body=Jtime).execute()
+        sheet.values().update(spreadsheetId=SPREADSHEET_ID,range=f'B{row}',valueInputOption='USER_ENTERED',body=Jrsi).execute()
+        sheet.values().update(spreadsheetId=SPREADSHEET_ID,range=f'C{row}',valueInputOption='USER_ENTERED',body=Jopen).execute()
+        sheet.values().update(spreadsheetId=SPREADSHEET_ID,range=f'D{row}',valueInputOption='USER_ENTERED',body=Jclose).execute()
+        sheet.values().update(spreadsheetId=SPREADSHEET_ID,range=f'E{row}',valueInputOption='USER_ENTERED',body=Jlow).execute()
+        sheet.values().update(spreadsheetId=SPREADSHEET_ID,range=f'F{row}',valueInputOption='USER_ENTERED',body=Jhigh).execute()
+        '''
+        analysis.run(prices,rsi(),dev(),row)
+        row+=1
+        req.run(tf)
 
 req.run(tf)
-
-if len(req.prices)==req.hlength:
-    run()
+run()
