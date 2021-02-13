@@ -24,7 +24,7 @@ exit = 1
 primeds = False
 primedl = False
 
-def run(prices,rsi):
+def run(prices,rsi,dev,row):
     global inTrade
     global inShort
     global inLong
@@ -36,51 +36,47 @@ def run(prices,rsi):
     global exit
     global primeds
     global primedl
-    diff2s = prices[2]['low']-prices[2]['open'] # difference 2 candles ago
-    diff1s = prices[1]['low']-prices[1]['open'] #difference 1 candle ago
-    diffs = prices[0]['close']-prices[0]['open'] #current difference
-    diff2l = prices[2]['high']-prices[2]['open'] # difference 2 candles ago
-    diff1l = prices[1]['high']-prices[1]['open'] #difference 1 candle ago
-    diffl = prices[0]['close']-prices[0]['open'] #current difference
+    diff2 = prices[row+2]['close']-prices[row+2]['open']
+    diff1 = prices[row+1]['close']-prices[row+1]['open'] #price diff whole, check if pos or neg
+    diff = prices[row]['close']-prices[row]['open'] #current difference
 
     if inTrade == False: #open conditions go here
         if rsi>=80:
             primeds = True
-            print("Primed for short!")
-        if primeds == True and diff1s<-50 and diffs<-50:
-            entry = prices[0]['close']
-            broker.short(entry,prices,rsi)
+        if primeds == True and diff<-50 and diff1<-50:
+            entry = prices[row]['close']
+            broker.short(entry)
             inTrade = True
             inShort = True
             primeds = False
         if rsi<=30:
             primedl = True
-            print("Primed for long!")
-        if primedl == True and diff1l>50 and diffl>50:
-            entry = prices[0]['close']
-            broker.long(entry,prices,rsi)
+        if primedl == True and diff1>50 and diff>50:
+            entry = prices[row]['close']
+            broker.long(entry)
             inTrade = True
             inLong = True
             primedl = False
     if inTrade == True: #close conditions go here
-        exit = prices[0]['close']
         if inShort == True:
+            exit = prices[row]['low']
             pNl = -1*((exit/entry-1)*100) #reversed for short
             if pNl>=takeProfit:
-                broker.close(exit,pNl,prices,rsi)
+                broker.close(exit,takeProfit)
                 inTrade = False
                 inShort = False
             if pNl<=stopLoss:
-                broker.close(exit,pNl,prices,rsi)
+                broker.close(exit,stopLoss)
                 inTrade = False
                 inShort = False
         if inLong == True:
+            exit = prices[row]['high']
             pNl = (exit/entry-1)*100 #full %: 1%, -2% 5% is 1, -2, 5
             if pNl>=takeProfit:
-                broker.close(exit,pNl,prices,rsi)
+                broker.close(exit,takeProfit)
                 inTrade = False
                 inLong = False
             if pNl<=stopLoss:
-                broker.close(exit,pNl,prices,rsi)
+                broker.close(exit,stopLoss)
                 inTrade = False
                 inLong = False
