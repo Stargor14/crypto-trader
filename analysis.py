@@ -25,7 +25,7 @@ def run(prices,rsi):
     global primeds
     global primedl
     stopLoss = -.2
-    takeProfit = .6
+    takeProfit = .45
 
     diff2 = prices[2]['close']-prices[2]['open']
     diff1 = prices[1]['close']-prices[1]['open'] #price diff whole, check if pos or neg
@@ -34,39 +34,43 @@ def run(prices,rsi):
     if inTrade == False: #open conditions go here
         if rsi>=80:
             primeds = True
-        if primeds == True and diff<-50 and diff1<-50:
+        if primeds == True and diff<-(prices[1]['close']/1000) and diff1<0: #if moves by .1%
             entry = prices[0]['close']
             broker.short(entry,prices,rsi)
             inTrade = True
             inShort = True
             primeds = False
+            primedl = False
         if rsi<=30:
             primedl = True
-        if primedl == True and diff1>50 and diff>50:
+        if primedl == True  and diff>(prices[1]['close']/1000) and diff1>0: #if moves by .1%
             entry = prices[0]['close']
             broker.long(entry,prices,rsi)
             inTrade = True
             inLong = True
             primedl = False
+            primeds = False
     if inTrade == True: #close conditions go here
         exit = prices[0]['close']
         if inShort == True:
             pNl = -1*((exit/entry-1)*100) #reversed for short
+            pNl1 = -1*((prices[1]['close']/entry-1)*100) #reversed for short
             if pNl>=takeProfit:
                 broker.close(exit,pNl,prices,rsi)
                 inTrade = False
                 inShort = False
-            if pNl<=stopLoss:
+            if pNl1<=stopLoss:
                 broker.close(exit,pNl,prices,rsi)
                 inTrade = False
                 inShort = False
         if inLong == True:
             pNl = (exit/entry-1)*100 #full %: 1%, -2% 5% is 1, -2, 5
+            pNl1 = (prices[1]['close']/entry-1)*100 #reversed for short
             if pNl>=takeProfit:
                 broker.close(exit,pNl,prices,rsi)
                 inTrade = False
                 inLong = False
-            if pNl<=stopLoss:
+            if pNl1<=stopLoss:
                 broker.close(exit,pNl,prices,rsi)
                 inTrade = False
                 inLong = False

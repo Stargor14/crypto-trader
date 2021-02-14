@@ -26,18 +26,25 @@ global client
 client = Client(apikey, secretkey)
 
 def long(en,prices,rsi):
+    global client
+    balance = client.futures_account_balance()[0]['balance']
+    print(balance)
+    quantity = round(float(balance)/prices[0]['close'],4)
     print(f"Entered LONG at: {en}")
-    #long function
+    client.futures_create_order(symbol='BTCUSDT',side="BUY",type="MARKET",quantity=quantity)
     record(prices,rsi,"long",0)
 
 def short(en,prices,rsi):
+    global client
     print(f"Entered SHORT at: {en}")
-    #short function
+    balance = client.futures_account_balance()[0]['balance']
+    quantity = round(float(balance)/prices[0]['close'],4)
+    client.futures_create_order(symbol='BTCUSDT',side="SELL",type="MARKET",quantity=quantity)
     record(prices,rsi,"short",0)
 
 def close(ex,pnl,prices,rsi):
     print(f"CLOSED at: {ex} with pNl of: {pnl}")
-    #close function
+    client.futures_create_order(symbol='BTCUSDT',side="BUY",type="MARKET",closePosition="true")
     record(prices,rsi,"close",pnl)
 
 def record(prices,rsi,type,pnl):
