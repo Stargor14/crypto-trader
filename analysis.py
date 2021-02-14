@@ -34,8 +34,7 @@ def run(prices,rsi):
     if inTrade == False: #open conditions go here
         if rsi>=80:
             primeds = True
-            primedl = False
-        if primeds == True and diff1<-30 and diff<-30: #if moves by .1%
+        if primeds == True and diff1<0 and diff<-20 and diff2 <-20:
             entry = prices[0]['close']
             broker.short(entry,prices,rsi)
             inTrade = True
@@ -44,8 +43,7 @@ def run(prices,rsi):
             primedl = False
         if rsi<=30:
             primedl = True
-            primeds = False
-        if primedl == True and diff1>30 and diff>30: #if moves by .1%
+        if primedl == True and diff1>0 and diff>20 and diff2>20:
             entry = prices[0]['close']
             broker.long(entry,prices,rsi)
             inTrade = True
@@ -56,7 +54,7 @@ def run(prices,rsi):
         exit = prices[0]['close']
         if inShort == True:
             pNl = -1*((exit/entry-1)*100) #reversed for short
-            pNl1 = -1*((prices[1]['close']/entry-1)*100) #reversed for short
+            pNl1 = -1*((prices[1]['close']/entry-1)*100)
             if pNl>=takeProfit: #add diff 1 and diff 2 trailing take priofts <--------------------------------------------
                 broker.close(exit,takeProfit,prices,rsi,'s')
                 inTrade = False
@@ -66,8 +64,8 @@ def run(prices,rsi):
                 inTrade = False
                 inShort = False
         if inLong == True:
-            pNl = (exit/entry-1)*100 #full %: 1%, -2% 5% is 1, -2, 5
-            pNl1 = (prices[1]['close']/entry-1)*100 #reversed for short
+            pNl = (exit/entry-1)*100
+            pNl1 = (prices[1]['close']/entry-1)*100
             if pNl>=takeProfit:
                 broker.close(exit,pNl,prices,rsi,'l')
                 inTrade = False
