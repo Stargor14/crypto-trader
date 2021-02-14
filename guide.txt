@@ -1,0 +1,11 @@
+GUIDE
+prerequisites
+python 3.6 or newer downloaded
+
+1.
+open command prompt
+cd into desired folder
+run:
+git clone https://github.com/Stargor14/crypto-trader.git
+
+2.

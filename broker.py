@@ -49,9 +49,15 @@ def short(en,prices,rsi):
 def close(ex,pnl,prices,rsi,type):
     print(f"CLOSED at: {ex} with pNl of: {pnl}")
     if type == 's':
-        client.futures_create_order(symbol='BTCUSDT',side="BUY",type="TAKE_PROFIT_MARKET",closePosition="true",stopPrice=round(prices[0]['close']-5,2))
+        try:
+            client.futures_create_order(symbol='BTCUSDT',side="BUY",type="TAKE_PROFIT_MARKET",closePosition="true",stopPrice=round(prices[0]['close']-3,2))
+        except:
+            client.futures_create_order(symbol='BTCUSDT',side="BUY",type="TAKE_PROFIT_MARKET",closePosition="true",stopPrice=round(prices[0]['close']+3,2))
     if type == 'l':
-        client.futures_create_order(symbol='BTCUSDT',side="BUY",type="TAKE_PROFIT_MARKET",closePosition="true",stopPrice=round(prices[0]['close']+5,2))
+        try:
+            client.futures_create_order(symbol='BTCUSDT',side="SELL",type="TAKE_PROFIT_MARKET",closePosition="true",stopPrice=round(prices[0]['close']+3,2))
+        except:
+            client.futures_create_order(symbol='BTCUSDT',side="SELL",type="TAKE_PROFIT_MARKET",closePosition="true",stopPrice=round(prices[0]['close']-3,2))
     record(prices,rsi,"close",pnl)
 
 def record(prices,rsi,type,pnl):
