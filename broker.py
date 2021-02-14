@@ -32,8 +32,8 @@ def long(en,prices,rsi):
     quantity = round(float(balance)/prices[0]['close'],4)*2
     print(f"Entered LONG at: {en}")
     client.futures_create_order(symbol='BTCUSDT',side="BUY",type="MARKET",quantity=quantity)
-    client.futures_create_order(symbol='BTCUSDT',side="SELL",type="TAKE_PROFIT_MARKET",closePosition="true",stopPrice=round(en*1.005,4))
-    client.futures_create_order(symbol='BTCUSDT',side="SELL",type="STOP_MARKET",closePosition="true",stopPrice=round(en*.998,4))
+    #client.futures_create_order(symbol='BTCUSDT',side="SELL",type="TAKE_PROFIT_MARKET",closePosition="true",stopPrice=round(en*1.005,4))
+    #client.futures_create_order(symbol='BTCUSDT',side="SELL",type="STOP_MARKET",closePosition="true",stopPrice=round(en*.998,4))
     record(prices,rsi,"long",0)
 
 def short(en,prices,rsi):
@@ -42,13 +42,16 @@ def short(en,prices,rsi):
     balance = client.futures_account_balance()[0]['balance']
     quantity = round(float(balance)/prices[0]['close'],4)*2
     client.futures_create_order(symbol='BTCUSDT',side="SELL",type="MARKET",quantity=quantity)
-    client.futures_create_order(symbol='BTCUSDT',side="BUY",type="TAKE_PROFIT_MARKET",closePosition="true",stopPrice=round(en*.995,4))
-    client.futures_create_order(symbol='BTCUSDT',side="BUY",type="STOP_MARKET",closePosition="true",stopPrice=round(en*1.002,4))
+    #client.futures_create_order(symbol='BTCUSDT',side="BUY",type="TAKE_PROFIT_MARKET",closePosition="true",stopPrice=round(en*.995,4))
+    #client.futures_create_order(symbol='BTCUSDT',side="BUY",type="STOP_MARKET",closePosition="true",stopPrice=round(en*1.002,4))
     record(prices,rsi,"short",0)
 
 def close(ex,pnl,prices,rsi,type):
     print(f"CLOSED at: {ex} with pNl of: {pnl}")
-    #client.futures_create_order(symbol='BTCUSDT',side="BUY",type="TAKE_PROFIT_MARKET",closePosition="true",stopPrice=prices[0]['close']-1)
+    if type == 's':
+        client.futures_create_order(symbol='BTCUSDT',side="BUY",type="TAKE_PROFIT_MARKET",closePosition="true",stopPrice=round(prices[0]['close']-5,2))
+    if type == 'l':
+        client.futures_create_order(symbol='BTCUSDT',side="BUY",type="TAKE_PROFIT_MARKET",closePosition="true",stopPrice=round(prices[0]['close']+5,2))
     record(prices,rsi,"close",pnl)
 
 def record(prices,rsi,type,pnl):
