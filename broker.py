@@ -29,4 +29,4 @@ def close(ex,pnl):
     balance=((pnl-.08)/100+1)*balance
     profit+=pnl-.08
     print(f"CLOSED at: {ex} with pNl of: {pnl-.08}")
-    print(f"Total balance: {balance} Total profit: {profit} Total trades: {tradesum}")
+    print(f"Total balance: {balance} Total profit: {profit}% Total trades: {tradesum}")
