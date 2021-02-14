@@ -16,14 +16,15 @@ credentials = service_account.Credentials.from_service_account_file(
         SERVICE_ACCOUNT_FILE, scopes=SCOPES)
 service = build('sheets', 'v4', credentials=credentials)
 sheet = service.spreadsheets()
-
-rsilength = int(input("rsi length: "))
-devlength = int(input("standard deviation length: "))
+global rsilength
+rsilength = 14
+devlength = 100
 
 global row
 row = 0
 def rsi():
     global row
+    global rsilength
     prices = req.prices
     g = []
     l = []
@@ -86,7 +87,7 @@ def run():
         sheet.values().update(spreadsheetId=SPREADSHEET_ID,range=f'E{row}',valueInputOption='USER_ENTERED',body=Jlow).execute()
         sheet.values().update(spreadsheetId=SPREADSHEET_ID,range=f'F{row}',valueInputOption='USER_ENTERED',body=Jhigh).execute()
         '''
-        analysis.run(prices,rsi(),dev(),row)
+        analysis.run(prices,rsi(),row)
         row+=1
         req.run()
 

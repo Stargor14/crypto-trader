@@ -2,6 +2,11 @@ import requests
 import json
 import time
 from binance.client import Client
+import datetime
+
+global ms
+epoch = datetime.datetime.utcfromtimestamp(0)
+ms = (datetime.datetime.now() - epoch).total_seconds() * 1000.0
 
 with open('Z:\github/keys.json') as f:
   data = json.load(f)
@@ -40,7 +45,8 @@ def run():
     def reqold():
         global client
         global prices
-        backtime = 1613171530000-60000000
+        global ms
+        backtime = ms-86400000*int(input("days: "))
         klines = client.get_historical_klines("BTCUSDT", Client.KLINE_INTERVAL_1MINUTE,str(backtime))
         a = []
         for i in klines:
