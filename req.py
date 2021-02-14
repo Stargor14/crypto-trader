@@ -3,7 +3,7 @@ import json
 import time
 from binance.client import Client
 
-with open('Z:\github/keys.json') as f:
+with open('Z:\github\keys.json') as f:
   data = json.load(f)
 
 apikey = data['public']
