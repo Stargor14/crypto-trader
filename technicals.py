@@ -52,7 +52,7 @@ def rsi():
     return rsi
 
 def macd():
-    prices=list(reversed(req.prices))
+    prices=req.prices
     df = pandas.DataFrame(prices)['close']
     exp1 = df.ewm(span=12, adjust=False).mean()
     exp2 = df.ewm(span=26, adjust=False).mean()
