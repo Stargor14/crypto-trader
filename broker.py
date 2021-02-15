@@ -29,21 +29,17 @@ def long(en,prices,rsi):
     global client
     balance = client.futures_account_balance()[0]['balance']
     print(balance)
-    quantity = round(float(balance)/prices[0]['close'],4)*2
+    quantity = round(float(balance)/prices[0]['close'],2)*1.5
     print(f"Entered LONG at: {en}")
     client.futures_create_order(symbol='BTCUSDT',side="BUY",type="MARKET",quantity=quantity)
-    #client.futures_create_order(symbol='BTCUSDT',side="SELL",type="TAKE_PROFIT_MARKET",closePosition="true",stopPrice=round(en*1.005,4))
-    #client.futures_create_order(symbol='BTCUSDT',side="SELL",type="STOP_MARKET",closePosition="true",stopPrice=round(en*.998,4))
     record(prices,rsi,"long",0)
 
 def short(en,prices,rsi):
     global client
     print(f"Entered SHORT at: {en}")
     balance = client.futures_account_balance()[0]['balance']
-    quantity = round(float(balance)/prices[0]['close'],4)*2
+    quantity = round(float(balance)/prices[0]['close'],2)*1.5
     client.futures_create_order(symbol='BTCUSDT',side="SELL",type="MARKET",quantity=quantity)
-    #client.futures_create_order(symbol='BTCUSDT',side="BUY",type="TAKE_PROFIT_MARKET",closePosition="true",stopPrice=round(en*.995,4))
-    #client.futures_create_order(symbol='BTCUSDT',side="BUY",type="STOP_MARKET",closePosition="true",stopPrice=round(en*1.002,4))
     record(prices,rsi,"short",0)
 
 def close(ex,pnl,prices,rsi,type):
