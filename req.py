@@ -28,7 +28,7 @@ def run():
     def runinit():
         global client
         global hlength
-        klines = client.get_klines(symbol='BTCUSDT', interval=Client.KLINE_INTERVAL_1MINUTE,limit=1000)
+        klines = client.get_klines(symbol='BTCUSDT', interval=Client.KLINE_INTERVAL_1HOUR,limit=1000)
         a = []
         for i in klines:
             a.append({"time":i[0], "open":float(i[1]), "close":float(i[4]),"low":float(i[3]), "high":float(i[2])})
@@ -37,7 +37,7 @@ def run():
     def reqc():
         global client
         try:
-            kline = client.get_klines(symbol='BTCUSDT', interval=Client.KLINE_INTERVAL_1MINUTE,limit=1)
+            kline = client.get_klines(symbol='BTCUSDT', interval=Client.KLINE_INTERVAL_1HOUR,limit=1)
             #8print(f"open {kline[0][1]} close {kline[0][4]}")
             return {"time":kline[0][0], "open":float(kline[0][1]), "close":float(kline[0][4]),"low":float(kline[0][4]), "high":float(kline[0][4])}
         except:
@@ -47,15 +47,14 @@ def run():
         global prices
         global ms
         backtime = ms-86400000*int(input("days: "))
-        klines = client.get_historical_klines("BTCUSDT", Client.KLINE_INTERVAL_1MINUTE,str(backtime))
+        klines = client.get_historical_klines("BTCUSDT", Client.KLINE_INTERVAL_1DAY,str(backtime))
         a = []
         for i in klines:
             a.append({"time":i[0], "open":float(i[1]), "close":float(i[4]),"low":float(i[3]), "high":float(i[2])})
         return a
     if runs<1:
+        #prices=list(reversed(reqold()))
         prices=reqold()
-        for i in prices:
-            print(i['time'])
         runs+=1
     '''
     if len(prices)==hlength:
