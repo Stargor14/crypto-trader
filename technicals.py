@@ -7,14 +7,13 @@ rsilength = 14
 devlength = 100
 global macda
 macda = []
-import matplotlib.pyplot as plt
+
 
 def rsi():
     global rsilength
     prices = req.prices
     df = pandas.DataFrame(prices)['close']
     delta = df.diff()
-    # Make the positive gains (up) and negative gains (down) Series
     up, down = delta.copy(), delta.copy()
     up[up < 0] = 0
     down[down > 0] = 0
@@ -22,8 +21,7 @@ def rsi():
     roll_down1 = down.abs().ewm(span=rsilength).mean()
     RS1 = roll_up1 / roll_down1
     RSI1 = 100.0 - (100.0 / (1.0 + RS1))
-    print(RSI1)
-    return RSI1
+    return RSI1[len(prices)-1]
 
 def macd():
     prices=list(reversed(req.prices))
@@ -32,7 +30,6 @@ def macd():
     exp2 = df.ewm(span=26, adjust=False).mean()
     macd = exp1 - exp2
     signal = macd.ewm(span=9, adjust=False).mean()
-
     return macd[len(prices)-1],signal[len(prices)-1]
 
 def run():

@@ -40,8 +40,6 @@ def run():
         if prices[0]['time'] != reqc()['time']:
             prices.pop(hlength-1)
             prices.insert(0,reqc())
-            #print(f"Closed Candle! Close {prices[1]['close']}")
-            #print(f"New Candle! Open: {prices[0]['open']}")
         else:
             prices[0] = reqc()
     time.sleep(1)
