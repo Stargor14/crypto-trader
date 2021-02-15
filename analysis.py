@@ -16,7 +16,7 @@ exit = 1
 primeds = False
 primedl = False
 
-def run(prices,rsi):
+def run(prices,rsi,macd,signal):
     global inTrade
     global inShort
     global inLong
@@ -24,8 +24,7 @@ def run(prices,rsi):
     global exit
     global primeds
     global primedl
-    stopLoss = -.2
-    takeProfit = .5
+    stopLoss = -1
 
     diff2 = prices[2]['close']-prices[2]['open']
     diff1 = prices[1]['close']-prices[1]['open'] #price diff whole, check if pos or neg
@@ -34,7 +33,7 @@ def run(prices,rsi):
     if inTrade == False: #open conditions go here
         if rsi>=80:
             primeds = True
-        if primeds == True and diff1<0 and diff<-20 and diff2 <-20:
+        if primeds == True and signal<macd:
             entry = prices[0]['close']
             broker.short(entry,prices,rsi)
             inTrade = True
@@ -43,7 +42,7 @@ def run(prices,rsi):
             primedl = False
         if rsi<=30:
             primedl = True
-        if primedl == True and diff1>0 and diff>20 and diff2>20:
+        if primedl == True and signal>macd:
             entry = prices[0]['close']
             broker.long(entry,prices,rsi)
             inTrade = True
@@ -55,7 +54,7 @@ def run(prices,rsi):
         if inShort == True:
             pNl = -1*((exit/entry-1)*100) #reversed for short
             pNl1 = -1*((prices[1]['close']/entry-1)*100)
-            if pNl>=takeProfit: #add diff 1 and diff 2 trailing take priofts <--------------------------------------------
+            if signal>macd:
                 broker.close(exit,takeProfit,prices,rsi,'s')
                 inTrade = False
                 inShort = False
@@ -66,7 +65,7 @@ def run(prices,rsi):
         if inLong == True:
             pNl = (exit/entry-1)*100
             pNl1 = (prices[1]['close']/entry-1)*100
-            if pNl>=takeProfit:
+            if signal<macd:
                 broker.close(exit,pNl,prices,rsi,'l')
                 inTrade = False
                 inLong = False

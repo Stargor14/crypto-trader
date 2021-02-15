@@ -12,11 +12,10 @@ global client
 client = Client(apikey, secretkey)
 
 global hlength
-hlength = 20
+hlength = 100
 global prices
 prices = []
-global runs
-runs = 0
+
 def run():
     global prices
     global runs
