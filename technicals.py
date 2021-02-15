@@ -7,6 +7,7 @@ rsilength = 14
 devlength = 100
 global macda
 macda = []
+import matplotlib.pyplot as plt
 
 def rsi():
     global row
@@ -33,7 +34,7 @@ def rsi():
     rs = ag/al
     rsi = round((100 - (100/(1+rs))),2)
     return rsi
-
+'''
 def sma(len,target):
     prices = req.prices
     sum=0
@@ -85,21 +86,37 @@ def signal(macd):
             ema.append((macd[i] * multiplier) + (ema[n-1]*(1 - multiplier)))
             n+=1
     return ema[8]
-
+'''
 #macd init
 # for i in reverse(range(9)):
 #   macd(i)
 #getting current macd will be macd(0)
 
+def macd():
+    prices=list(reversed(req.prices))
+    df = pandas.DataFrame(prices)['close']
+    exp1 = df.ewm(span=12, adjust=False).mean()
+    exp2 = df.ewm(span=26, adjust=False).mean()
+    macd = exp1 - exp2
+    signal = macd.ewm(span=9, adjust=False).mean()
+    '''
+    macd.plot(label='BTC MACD', color='g')
+    ax = signal.plot(label='Signal Line', color='r')
+    df.plot(ax=ax, secondary_y=True, label='BTC')
+    ax.set_ylabel('MACD')
+    ax.right_ax.set_ylabel('Price $')
+    ax.set_xlabel('CANDLE')
+    lines = ax.get_lines() + ax.right_ax.get_lines()
+    ax.legend(lines, [l.get_label() for l in lines], loc='upper left')
+    plt.show()
+    '''
+    return macd[len(prices)-1],signal[len(prices)-1]
+
 def run():
     while True:
         prices = req.prices
-        m=[]
-        for i in range(17):
-            m.append(macd(i))
-        analysis.run(prices,rsi(),macd(0),signal(m))
+        analysis.run(prices,rsi(),macd()[0],macd()[1])
         req.run()
-
 req.run()
 run()
 
