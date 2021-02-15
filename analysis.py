@@ -57,10 +57,10 @@ def run(prices,rsi,macd,signal,row):
             primedl = False
     if inTrade == True: #close conditions go here
         if inShort == True:
-            exit = prices[row]['low']
+            exit = prices[row]['close']
             pNl = -1*((exit/entry-1)*100) #reversed for short
-            if signal>=macd:
-                broker.close(exit,takeProfit)
+            if signal>=macd or pNl>=takeProfit:
+                broker.close(exit,pNl)
                 inTrade = False
                 inShort = False
             if pNl<=stopLoss:
@@ -68,9 +68,9 @@ def run(prices,rsi,macd,signal,row):
                 inTrade = False
                 inShort = False
         if inLong == True:
-            exit = prices[row]['high']
+            exit = prices[row]['close']
             pNl = (exit/entry-1)*100 #full %: 1%, -2% 5% is 1, -2, 5
-            if signal<=macd:
+            if signal<=macd or pNl>=takeProfit:
                 broker.close(exit,pNl)
                 inTrade = False
                 inLong = False
