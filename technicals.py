@@ -1,7 +1,8 @@
 import req
 import analysis
 import math
-
+import pandas_datareader as pdr
+import pandas
 rsilength = 14
 devlength = 100
 global macda
@@ -32,7 +33,7 @@ def rsi():
     rs = ag/al
     rsi = round((100 - (100/(1+rs))),2)
     return rsi
-
+'''
 def sma(len,target):
     prices = req.prices
     sum=0
@@ -84,20 +85,33 @@ def signal(macd):
             ema.append((macd[i] * multiplier) + (ema[n-1]*(1 - multiplier)))
             n+=1
     return ema[8]
-
+'''
 #macd init
 # for i in reverse(range(9)):
 #   macd(i)
 #getting current macd will be macd(0)
-
+def macd():
+    prices = req.prices
+    p = []
+    for i in range(12):
+        p.append(prices[i]['close'])
+    a = []
+    for i in range(26):
+        a.append(prices[i]['close'])
+    df12 = pandas.DataFrame(p)
+    df26 = pandas.DataFrame(a)
+    exp1 = df12.ewm(span=12, adjust=False).mean()
+    exp2 = df26.ewm(span=26, adjust=False).mean()
+    macd = exp1[0][0]
+    return exp1[0][0],exp2[0][0]
 def run():
     while True:
         prices = req.prices
         m=[]
-        for i in range(18):
-            m.append(macd(i))
-        analysis.run(prices,rsi(),macd(0),signal(m))
-        print(macd(0),signal(m))
+        #for i in range(17):
+            #m.append(macd(i))
+        #analysis.run(prices,rsi(),macd(0),signal(m))
+        #print(f"MACD: {macd()}")
         req.run()
 
 req.run()
