@@ -128,8 +128,13 @@ def run():
         '''
         m=[]
         for i in range(17):
-            m.append(macd(i))
-        analysis.run(prices,rsi(),macd(row),signal(m),row)
+            m.append(macd(i+row))
+        #analysis.run(prices,rsi(),macd(row),signal(m),row)
+        if signal(m)<macd(row):
+            print(f"MACD: {round(macd(row),2)} Signal: {round(signal(m),2)} LOWER")
+        if signal(m)>macd(row):
+            print(f"MACD: {round(macd(row),2)} Signal: {round(signal(m),2)} HIGHER")
+
         row+=1
         req.run()
 

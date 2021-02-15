@@ -47,7 +47,7 @@ def run():
         global prices
         global ms
         backtime = ms-86400000*int(input("days: "))
-        klines = client.get_historical_klines("BTCUSDT", Client.KLINE_INTERVAL_1DAY,str(backtime))
+        klines = client.get_historical_klines("BTCUSDT", Client.KLINE_INTERVAL_1MINUTE,str(backtime))
         a = []
         for i in klines:
             a.append({"time":i[0], "open":float(i[1]), "close":float(i[4]),"low":float(i[3]), "high":float(i[2])})
