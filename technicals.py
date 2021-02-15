@@ -105,7 +105,7 @@ def signal(macd):
 def run():
     global row
     prices = req.prices
-    while row<=len(prices)-20:
+    while row<=len(prices)-100:
         '''
         timeL = [[prices[row-2]['time']]]
         Jtime = {"values":timeL}
@@ -126,7 +126,10 @@ def run():
         sheet.values().update(spreadsheetId=SPREADSHEET_ID,range=f'E{row}',valueInputOption='USER_ENTERED',body=Jlow).execute()
         sheet.values().update(spreadsheetId=SPREADSHEET_ID,range=f'F{row}',valueInputOption='USER_ENTERED',body=Jhigh).execute()
         '''
-        analysis.run(prices,rsi(),row)
+        m=[]
+        for i in range(18):
+            m.append(macd(i))
+        analysis.run(prices,rsi(),macd(row),signal(m),row)
         row+=1
         req.run()
 
