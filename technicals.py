@@ -50,18 +50,57 @@ def rsi():
     #print(f"rsi: {rsi}")
     return rsi
 
-def dev():
-    global row
+def sma(len,target):
     prices = req.prices
     sum=0
-    for i in range(devlength):
-        sum+=prices[i+row-2]['close']
-    diffsum=0
-    for i in range(devlength):
-        diffsum+=(prices[i+row-2]['close']-sum/devlength)**2
-    dev = math.sqrt(diffsum/devlength)
-    #print(f"dev: {dev}")
-    return dev
+    for i in range(len):
+        sum+=prices[target]['close']
+    sma = sum/len
+    return sma
+
+def ema(len,target):
+    prices = req.prices
+    ema =[]
+    n=0
+    for i in reversed(range(len)):
+        if i == len-1:
+            ema.append(sma(len,target+i))
+            n+=1
+        else:
+        # multiplier: (2 / (length + 1))
+        # EMA: (close * multiplier) + ((1 - multiplier) * EMA(previous))
+            multiplier = 2 / (len + 1)
+            ema.append((prices[i+target]['close'] * multiplier) + (ema[n-1]*(1 - multiplier)))
+            n+=1
+    return ema[len-1]
+
+def macd(target):
+    ema26 = ema(26,target)
+    ema12 = ema(12,target)
+    macd = ema12 - ema26
+    return macd
+
+def sigsma(macd):
+    sum=0
+    for i in range(9):
+        sum+=macd[i+8]
+    sma = sum/9
+    return sma
+
+def signal(macd):
+    ema=[]
+    n=0
+    for i in reversed(range(9)):
+        if i == 8:
+            ema.append(sigsma(macd))
+            n+=1
+        else:
+        # multiplier: (2 / (length + 1))
+        # EMA: (close * multiplier) + ((1 - multiplier) * EMA(previous))
+            multiplier = 2 / (9 + 1)
+            ema.append((macd[i] * multiplier) + (ema[n-1]*(1 - multiplier)))
+            n+=1
+    return ema[8]
 
 def run():
     global row
