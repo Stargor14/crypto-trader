@@ -39,47 +39,47 @@ def run(prices,rsi,macd,signal,row):
     diff = prices[row]['close']-prices[row]['open'] #current difference
 
     if inTrade == False: #open conditions go here
-        if rsi>=80:
+        if rsi>=70:
             primeds = True
             primedl = False
-        if primeds == True and signal>macd:
-            entry = prices[row]['close']
-            broker.short(entry)
-            inTrade = True
-            inShort = True
-            primeds = False
-        if rsi<=30:
-            primedl = True
-            primeds = False
         if primedl == True and signal<macd:
             entry = prices[row]['close']
-            broker.long(entry)
+            broker.long(entry,row)
             inTrade = True
             inLong = True
             primedl = False
+        if rsi<=30:
+            primedl = True
+            primeds = False
+        if primeds == True and signal>macd:
+            entry = prices[row]['close']
+            broker.short(entry,row)
+            inTrade = True
+            inShort = True
+            primeds = False
         if rsi>50 and rsi<60:
             primedl = False
             primeds = False
     if inTrade == True: #close conditions go here
-        if inShort == True:
-            exit = prices[row]['close']
-            pNl = -1*((exit/entry-1)*100) #reversed for short
-            if pNl>=takeProfit:
-                broker.close(exit,pNl)
-                inTrade = False
-                inShort = False
-            if pNl<=stopLoss:
-                broker.close(exit,stopLoss)
-                inTrade = False
-                inShort = False
         if inLong == True:
             exit = prices[row]['close']
-            pNl = (exit/entry-1)*100 #full %: 1%, -2% 5% is 1, -2, 5
+            pNl = (exit/entry-1)*100 #reversed for short
             if pNl>=takeProfit:
-                broker.close(exit,pNl)
+                broker.close(exit,pNl,row)
                 inTrade = False
                 inLong = False
             if pNl<=stopLoss:
-                broker.close(exit,stopLoss)
+                broker.close(exit,stopLoss,row)
                 inTrade = False
                 inLong = False
+        if inShort == True:
+            exit = prices[row]['close']
+            pNl = -(exit/entry-1)*100 #full %: 1%, -2% 5% is 1, -2, 5
+            if pNl>=takeProfit:
+                broker.close(exit,pNl,row)
+                inTrade = False
+                inShort = False
+            if pNl<=stopLoss:
+                broker.close(exit,stopLoss,row)
+                inTrade = False
+                inShort = False
