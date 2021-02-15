@@ -104,26 +104,6 @@ req.run()
 run()
 
 '''
-def macd():
-    macda = []
-    prices = req.prices
-    for c in range(9):
-        ema26 = [] #index 0 is oldest old -> new
-        ema12 = [] #index 0 is oldest old -> new
-        for i in range(26):
-            if i == 0:
-                ema26.append(emaprep(26,c)[0])
-            else:
-                ema26.append((prices[25-i+c]['close']*emaprep(26,c)[1])+(ema26[i-1]*(1-emaprep(26,c)[1])))
-        for i in range(12):
-            if i == 0:
-                ema12.append(emaprep(12,c)[0])
-            else:
-                ema12.append((prices[11-i+c]['close']*emaprep(12,c)[1])+(ema12[i-1]*(1-emaprep(12,c)[1])))
-        macda.append(ema12[8]-ema26[8])
-    return({"macd":macda[8],"signal":signal(macda)})
-'''
-'''
 def dev():
     global row
     prices = req.prices
