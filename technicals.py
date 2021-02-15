@@ -6,6 +6,7 @@ from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 import csv
+import pandas
 
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 SERVICE_ACCOUNT_FILE = 'Z:\github\skeys.json'
@@ -50,6 +51,28 @@ def rsi():
     #print(f"rsi: {rsi}")
     return rsi
 
+def macd():
+    prices=list(reversed(req.prices))
+    df = pandas.DataFrame(prices)['close']
+    exp1 = df.ewm(span=12, adjust=False).mean()
+    exp2 = df.ewm(span=26, adjust=False).mean()
+    macd = exp1 - exp2
+    signal = macd.ewm(span=9, adjust=False).mean()
+    return macd,signal
+
+def run():
+    global row
+    prices = req.prices
+    macda = macd()[0]
+    signala = macd()[1]
+    while row<=len(prices)-100:
+        analysis.run(prices,rsi(),macda[row],signala[row],row)
+        row+=1
+        req.run()
+
+req.run()
+run()
+'''
 def sma(len,target):
     prices = req.prices
     sum=0
@@ -101,42 +124,4 @@ def signal(macd):
             ema.append((macd[i] * multiplier) + (ema[n-1]*(1 - multiplier)))
             n+=1
     return ema[8]
-
-def run():
-    global row
-    prices = req.prices
-    while row<=len(prices)-100:
-        '''
-        timeL = [[prices[row-2]['time']]]
-        Jtime = {"values":timeL}
-        rsiL = [[round(rsi(),2)]]
-        Jrsi = {"values":rsiL}
-        openL = [[prices[row-2]['open']]]
-        Jopen = {"values":openL}
-        closeL = [[prices[row-2]['close']]]
-        Jclose = {"values":closeL}
-        lowL = [[prices[row-2]['low']]]
-        Jlow = {"values":lowL}
-        highL = [[prices[row-2]['high']]]
-        Jhigh = {"values":highL}
-        sheet.values().update(spreadsheetId=SPREADSHEET_ID,range=f'A{row}',valueInputOption='USER_ENTERED',body=Jtime).execute()
-        sheet.values().update(spreadsheetId=SPREADSHEET_ID,range=f'B{row}',valueInputOption='USER_ENTERED',body=Jrsi).execute()
-        sheet.values().update(spreadsheetId=SPREADSHEET_ID,range=f'C{row}',valueInputOption='USER_ENTERED',body=Jopen).execute()
-        sheet.values().update(spreadsheetId=SPREADSHEET_ID,range=f'D{row}',valueInputOption='USER_ENTERED',body=Jclose).execute()
-        sheet.values().update(spreadsheetId=SPREADSHEET_ID,range=f'E{row}',valueInputOption='USER_ENTERED',body=Jlow).execute()
-        sheet.values().update(spreadsheetId=SPREADSHEET_ID,range=f'F{row}',valueInputOption='USER_ENTERED',body=Jhigh).execute()
-        '''
-        m=[]
-        for i in range(17):
-            m.append(macd(i+row))
-        #analysis.run(prices,rsi(),macd(row),signal(m),row)
-        if signal(m)<macd(row):
-            print(f"MACD: {round(macd(row),2)} Signal: {round(signal(m),2)} LOWER")
-        if signal(m)>macd(row):
-            print(f"MACD: {round(macd(row),2)} Signal: {round(signal(m),2)} HIGHER")
-
-        row+=1
-        req.run()
-
-req.run()
-run()
+'''
