@@ -3,7 +3,7 @@ import analysis
 import math
 import pandas_datareader as pdr
 import pandas
-rsilength = 14
+rsilength = 10
 devlength = 100
 global macda
 macda = []
