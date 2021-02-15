@@ -58,6 +58,15 @@ def macd():
     exp2 = df.ewm(span=26, adjust=False).mean()
     macd = exp1 - exp2
     signal = macd.ewm(span=9, adjust=False).mean()
+    macd.plot(label='BTC MACD', color='g')
+    ax = signal.plot(label='Signal Line', color='r')
+    df.plot(ax=ax, secondary_y=True, label='BTC')
+    ax.set_ylabel('MACD')
+    ax.right_ax.set_ylabel('Price $')
+    ax.set_xlabel('CANDLE')
+    lines = ax.get_lines() + ax.right_ax.get_lines()
+    ax.legend(lines, [l.get_label() for l in lines], loc='upper left')
+    plt.show()
     return macd,signal
 
 def run():
