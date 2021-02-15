@@ -20,7 +20,7 @@ credentials = service_account.Credentials.from_service_account_file(
 service = build('sheets', 'v4', credentials=credentials)
 sheet = service.spreadsheets()
 global rsilength
-rsilength = 8
+rsilength = int(input("RSI Length: "))
 devlength = 100
 
 global row
