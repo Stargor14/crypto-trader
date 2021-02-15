@@ -18,9 +18,11 @@ balance = int(input("Starting balance: "))
 def long(en):
     print(f"Entered LONG at: {en}")
     #long function
+    pass
 def short(en):
     print(f"Entered SHORT at: {en}")
     #short function
+    pass
 def close(ex,pnl):
     global balance
     global profit

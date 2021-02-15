@@ -127,7 +127,7 @@ def run():
         sheet.values().update(spreadsheetId=SPREADSHEET_ID,range=f'F{row}',valueInputOption='USER_ENTERED',body=Jhigh).execute()
         '''
         m=[]
-        for i in range(18):
+        for i in range(17):
             m.append(macd(i))
         analysis.run(prices,rsi(),macd(row),signal(m),row)
         row+=1

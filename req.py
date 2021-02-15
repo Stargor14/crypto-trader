@@ -53,7 +53,9 @@ def run():
             a.append({"time":i[0], "open":float(i[1]), "close":float(i[4]),"low":float(i[3]), "high":float(i[2])})
         return a
     if runs<1:
-        prices=list(reversed(reqold()))
+        prices=reqold()
+        for i in prices:
+            print(i['time'])
         runs+=1
     '''
     if len(prices)==hlength:
