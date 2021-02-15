@@ -15,9 +15,7 @@ profit = 0
 global tradesum
 tradesum = 0
 global balance
-balance = int(input("Starting balance: "))
-global trades
-trades=[]
+balance = 100
 def long(en,row):
     print(f"Entered LONG at: {en}")
     #long function
