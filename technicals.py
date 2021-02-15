@@ -1,7 +1,6 @@
 import req
 import math
 import pandas
-import broker
 import json
 
 def rsi(rsilength):
@@ -35,6 +34,7 @@ def test(prices,rsi,macda,signala,takeProfit,stopLoss):
     balance = 1
     rsimax=70
     rsimin=30
+    trades=0
     for candle in prices:
         if inTrade == False:
             entry = candle['close']
@@ -60,25 +60,29 @@ def test(prices,rsi,macda,signala,takeProfit,stopLoss):
                 exit = candle['high']
                 pNl = (exit/entry-1)*100
                 if pNl>=takeProfit:
-                    balance=balance*((takeProfit/100)+1)
+                    balance=balance*(((takeProfit-.08)/100)+1)
+                    trades+=1
                     inTrade = False
                     inLong = False
                 if pNl<=stopLoss:
-                    balance=balance*((stopLoss/100)+1)
+                    balance=balance*(((stopLoss-.08)/100)+1)
+                    trades+=1
                     inTrade = False
                     inLong = False
             if inShort == True:
                 exit = candle['low']
                 pNl = -(exit/entry-1)*100
                 if pNl>=takeProfit:
-                    balance=balance*((takeProfit/100)+1)
+                    balance=balance*(((takeProfit-.08)/100)+1)
+                    trades+=1
                     inTrade = False
                     inShort = False
                 if pNl<=stopLoss:
-                    balance=balance*((stopLoss/100)+1)
+                    balance=balance*(((stopLoss-.08)/100)+1)
+                    trades+=1
                     inTrade = False
                     inShort = False
-    return balance
+    return balance,trades
 
 def sorter(i):
     return i['BALANCE']
@@ -87,16 +91,16 @@ def run():
     macda = macd()[0]
     signala = macd()[1]
     prices = req.prices
-    dataset=[{"RSI LENGTH":0,"TAKE PROFIT":0,"STOP LOSS":0,"BALANCE":0}]
+    dataset=[{"RSI LENGTH":0,"TAKE PROFIT":0,"STOP LOSS":0,"BALANCE":0,"TRADES":0}]
     num = 0
     for rsilength in range(5,20):
         for takeProfit in range(0,20):
             for stopLoss in range(-20,0):
-                if num%1000==0:
+                if num%100==0:
                     print(num)
                 balance = test(prices,rsi(rsilength)[num],macda[num],signala[num],takeProfit/10,stopLoss/10)
-                if balance>=dataset[0]['BALANCE']:
-                    dataset.append({"RSI LENGTH":rsilength,"TAKE PROFIT":takeProfit,"STOP LOSS":stopLoss,"BALANCE":balance})
+                if balance[0]>=dataset[0]['BALANCE']:
+                    dataset.append({"RSI LENGTH":rsilength,"TAKE PROFIT":takeProfit,"STOP LOSS":stopLoss,"BALANCE":balance[0],"TRADES":balance[1]})
                     dataset.sort(key=sorter)
                     if len(dataset)>50:
                         dataset.pop(0)
@@ -105,7 +109,10 @@ def run():
 
     with open("Z:\github\data.json", "w") as write_file:
         json.dump(dataset, write_file)
+    j=0
+    for i in dataset:
+        print(f"rank: {j} RSI length: {i['RSI LENGTH']} Take Profit: {i['TAKE PROFIT']/10} Stop Loss: {i['STOP LOSS']/10} Balance: {round(i['BALANCE'],4)} Trades: {i['TRADES']}")
+        j+=1
 
-#PRINT THE DATASET <------------------------------------------------------------------------------------------------------------------|
 req.run()
 run()
