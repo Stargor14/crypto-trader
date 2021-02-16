@@ -103,7 +103,7 @@ def run():
     prices = req.prices
     rsia = rsi
     num = 0
-    runs = 5*12*15
+    runs = 25*25
     rsilength = 14
     dataset=[{"RSI LENGTH":0,"TAKE PROFITL":0,"STOP LOSSL":0,"TAKE PROFITS":0,"STOP LOSSS":0,"BALANCE":0,"TRADES":0}]
     takeProfitl = 29
