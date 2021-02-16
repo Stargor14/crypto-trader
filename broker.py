@@ -19,11 +19,9 @@ balance = int(input("Starting balance: "))
 global trades
 trades=[]
 def long(en,row):
-    print(f"Entered LONG at: {en}")
     #long function
     trades.append([row,en,'l'])
 def short(en,row):
-    print(f"Entered SHORT at: {en}")
     #short function
     trades.append([row,en,'s'])
 def close(ex,pnl,row):
@@ -34,5 +32,4 @@ def close(ex,pnl,row):
     balance=((pnl-.08)/100+1)*balance
     profit+=pnl-.08
     trades.append([row,ex,'c'])
-    print(f"CLOSED at: {ex} with pNl of: {pnl-.08}")
     print(f"Total balance: {balance} Total profit: {profit}% Total trades: {tradesum}")
