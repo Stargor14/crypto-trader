@@ -25,15 +25,13 @@ def macd():
     signal = macd.ewm(span=9, adjust=False).mean()
     return macd,signal
 
-def test(prices,rsia,macda,signala,takeProfit,stopLoss):
+def test(prices,rsia,macda,signala,takeProfit,stopLoss,rsimax,rsimin):
     primeds = False
     primedl = False
     inTrade = False
     inLong = False
     inShort = False
     balance = 100
-    rsimax=70
-    rsimin=30
     trades=0
     for i in range(len(prices)):
         if inTrade == False:
@@ -96,25 +94,26 @@ def run():
     signala = macd()[1]
     prices = req.prices
     num = 0
-    dataset=[{"RSI LENGTH":0,"TAKE PROFIT":0,"STOP LOSS":0,"BALANCE":0,"TRADES":0}]
-    for rsilength in range(5,20):
-        for takeProfit in range(1,40):
-            for stopLoss in range(-40,1):
-                print(num)
-                balance = test(prices,rsi(rsilength),macda,signala,takeProfit/10,stopLoss/10)
-                if balance[0]>=dataset[0]['BALANCE']:
-                    dataset.append({"RSI LENGTH":rsilength,"TAKE PROFIT":takeProfit,"STOP LOSS":stopLoss,"BALANCE":balance[0],"TRADES":balance[1]})
-                    dataset.sort(key=sorter)
-                    if len(dataset)>50:
-                        dataset.pop(0)
-                num+=1
-    print("Michael is obese and we need to code thge email thingy rn ASAP Rocky type beat")
+    dataset=[{"RSI LENGTH":0,"TAKE PROFIT":0,"STOP LOSS":0,"BALANCE":0,"TRADES":0,"RSI MAX":0,"RSI MIN":0}]
+    for rsimax in range(65,75,5):
+        for rsimin in range(25,35,5):
+            for rsilength in range(8,16):
+                for takeProfit in range(5,30):
+                    for stopLoss in range(-25,-5):
+                        print(f"{num}/{3*3*8*25*20}")
+                        balance = test(prices,rsi(rsilength),macda,signala,takeProfit/10,stopLoss/10,rsimax,rsimin)
+                        if balance[0]>=dataset[0]['BALANCE']:
+                            dataset.append({"RSI LENGTH":rsilength,"TAKE PROFIT":takeProfit,"STOP LOSS":stopLoss,"BALANCE":balance[0],"TRADES":balance[1],"RSI MAX":rsimax,"RSI MIN":rsimin})
+                            dataset.sort(key=sorter)
+                            if len(dataset)>50:
+                                dataset.pop(0)
+                        num+=1
+    #print("Michael is obese and we need to code thge email thingy rn ASAP Rocky type beat")
     with open("Z:\github\data.json", "w") as write_file:
         json.dump(dataset, write_file)
-    j=0
+    j=50
     for i in dataset:
-        print(f"rank: {j} RSI length: {i['RSI LENGTH']} Take Profit: {i['TAKE PROFIT']/10} Stop Loss: {i['STOP LOSS']/10} Balance: {round(i['BALANCE'],4)} Trades: {i['TRADES']}")
-        j+=1
-
+        print(f"rank: {j} RSI length: {i['RSI LENGTH']} Take Profit: {i['TAKE PROFIT']/10} Stop Loss: {i['STOP LOSS']/10} Balance: {round(i['BALANCE'],4)} Trades: {i['TRADES']} RSI MAX: {i['RSI MAX']}  RSI MIN: {i['RSI MIN']}")
+        j-=1
 req.run()
 run()
