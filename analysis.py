@@ -66,8 +66,8 @@ def run(prices,rsi,macd,signal,row):
             exith = prices[row]['high']
             pNll = (exitl/entry-1)*100
             pNlh = (exith/entry-1)*100
-            if pNlh>=takeProfit:
-                broker.close(exith,takeProfit,row)
+            if pNlh>=takeProfit or signal>macd and pNlh>=takeProfit/4 or rsi>70  and pNlh>=takeProfit/4:
+                broker.close(exith,pNlh,row)
                 inTrade = False
                 inLong = False
             if pNll<=stopLoss:
@@ -79,8 +79,8 @@ def run(prices,rsi,macd,signal,row):
             exith = prices[row]['high']
             pNll = -(exitl/entry-1)*100
             pNlh = -(exith/entry-1)*100
-            if pNll>=takeProfit:
-                broker.close(exitl,takeProfit,row)
+            if pNll>=takeProfit or signal<macd and pNll>=takeProfit/4 or rsi<30  and pNll>=takeProfit/4:
+                broker.close(exitl,pNll,row)
                 inTrade = False
                 inShort = False
             if pNlh<=stopLoss:

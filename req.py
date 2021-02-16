@@ -28,7 +28,7 @@ def run():
     def runinit():
         global client
         global hlength
-        klines = client.get_klines(symbol='BTCUSDT', interval=Client.KLINE_INTERVAL_1HOUR,limit=1000)
+        klines = client.get_klines(symbol='BTCUSDT', interval=Client.KLINE_INTERVAL_1MINUTE,limit=1000)
         a = []
         for i in klines:
             a.append({"time":i[0], "open":float(i[1]), "close":float(i[4]),"low":float(i[3]), "high":float(i[2])})
@@ -46,8 +46,9 @@ def run():
         global client
         global prices
         global ms
-        backtime = ms-86400000*int(input("days: "))
-        klines = client.get_historical_klines("BTCUSDT", Client.KLINE_INTERVAL_1MINUTE,str(backtime))
+        backtime = ms-86400000*int(input("Start days ago: "))
+        forwardtime = ms-86400000*int(input("End days ago: "))
+        klines = client.get_historical_klines("BTCUSDT", Client.KLINE_INTERVAL_1MINUTE,str(backtime),str(forwardtime))
         a = []
         for i in klines:
             a.append({"time":i[0], "open":float(i[1]), "close":float(i[4]),"low":float(i[3]), "high":float(i[2])})
