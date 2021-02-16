@@ -23,7 +23,7 @@ def run():
         global client
         global prices
         global ms
-        backtime = ms-31536000000
+        backtime = ms-657000000
         klines = client.get_historical_klines("BTCUSDT", Client.KLINE_INTERVAL_1MINUTE,str(backtime))
         a = []
         for i in klines:
