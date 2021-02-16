@@ -24,8 +24,8 @@ def run(prices,rsi,macd,signal):
     global exit
     global primeds
     global primedl
-    stopLoss = -.7
-    takeprofit = .7
+    stopLoss = -(float(input("stop: ")))
+    takeProfit = (float(input("take: ")))
     if inTrade == False: #open conditions go here
         if rsi>=70:
             primeds = True
