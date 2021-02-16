@@ -52,9 +52,9 @@ def test(prices,rsi,macda,signala,takeProfit,stopLoss):
                 inTrade = True
                 inShort = True
                 primeds = False
-            if ((rsimax+rsimin)/2)-((rsimax+rsimin)/20)<rsi<((rsimax+rsimin)/2)+((rsimax+rsimin)/20):
-                primedl = False
-                primeds = False
+            #if ((rsimax+rsimin)/2)-((rsimax+rsimin)/20)<rsi<((rsimax+rsimin)/2)+((rsimax+rsimin)/20):
+                #primedl = False
+                #primeds = False
         if inTrade == True:
             if inLong == True:
                 exit = candle['high']
