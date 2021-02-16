@@ -57,9 +57,9 @@ def run(prices,rsi,macd,signal,row):
             inTrade = True
             inShort = True
             primeds = False
-        if rsi>50 and rsi<60:
-            primedl = False
-            primeds = False
+        #if rsi>45 and rsi<55:
+            #primedl = False
+            #primeds = False
     if inTrade == True: #close conditions go here
         if inLong == True:
             exit = prices[row]['close']
