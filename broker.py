@@ -1,5 +1,8 @@
 import requests
 import json
+import smtplib
+import os
+from email.message import EmailMessage
 from binance.client import Client
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
@@ -55,6 +58,20 @@ def close(ex,pnl,prices,rsi,type):
         except:
             client.futures_create_order(symbol='BTCUSDT',side="SELL",type="TAKE_PROFIT_MARKET",closePosition="true",stopPrice=round(prices[0]['close']-3,2))
     record(prices,rsi,"close",pnl)
+    def x():
+        Email_Adress = 'andy.btc.profit@gmail.com'
+        Email_Password = 'sgijlrmqtkskkabi'
+
+        msg = EmailMessage()
+        msg['Subject'] = 'Michaels New Weight!!'
+        msg['From'] = Email_Adress
+        msg['to'] = 'andy.btc.profit@gmail.com'
+        msg.set_content("x")
+
+        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+            smtp.login(Email_Adress, Email_Password)
+            smtp.send_message(msg)
+    x()
 
 def record(prices,rsi,type,pnl):
     with open('row.json','r') as f:
