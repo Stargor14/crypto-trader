@@ -7,7 +7,8 @@ global entry
 global exit
 global primeds
 global primedl
-
+global stopLoss
+global takeProfit
 inTrade = False
 inShort = False
 inLong = False
@@ -15,7 +16,8 @@ entry = 1
 exit = 1
 primeds = False
 primedl = False
-
+stopLoss = -(float(input("stop: ")))
+takeProfit = (float(input("take: ")))
 def run(prices,rsi,macd,signal):
     global inTrade
     global inShort
@@ -24,8 +26,9 @@ def run(prices,rsi,macd,signal):
     global exit
     global primeds
     global primedl
-    stopLoss = -(float(input("stop: ")))
-    takeProfit = (float(input("take: ")))
+    global stopLoss
+    global takeProfit
+    
     if inTrade == False: #open conditions go here
         if rsi>=70:
             primeds = True
