@@ -25,30 +25,30 @@ def macd():
     signal = macd.ewm(span=9, adjust=False).mean()
     return macd,signal
 
-def test(prices,rsi,macda,signala,takeProfit,stopLoss):
+def test(prices,rsia,macda,signala,takeProfit,stopLoss):
     primeds = False
     primedl = False
     inTrade = False
     inLong = False
     inShort = False
-    balance = 1
+    balance = 100
     rsimax=70
     rsimin=30
     trades=0
-    for candle in prices:
+    for i in range(len(prices)):
         if inTrade == False:
-            entry = candle['close']
-            if rsi>=rsimax:
+            entry = prices[i]['close']
+            if rsia[i]>=rsimax:
                 primeds = True
                 primedl = False
-            if primedl == True and signala<macda:
+            if primedl == True and signala[i]<macda[i]:
                 inTrade = True
                 inLong = True
                 primedl = False
-            if rsi<=rsimin:
+            if rsia[i]<=rsimin:
                 primedl = True
                 primeds = False
-            if primeds == True and signala>macda:
+            if primeds == True and signala[i]>macda[i]:
                 inTrade = True
                 inShort = True
                 primeds = False
@@ -57,27 +57,31 @@ def test(prices,rsi,macda,signala,takeProfit,stopLoss):
                 #primeds = False
         if inTrade == True:
             if inLong == True:
-                exit = candle['high']
-                pNl = (exit/entry-1)*100
-                if pNl>=takeProfit:
+                exitl = prices[i]['low']
+                exith = prices[i]['high']
+                pNll = (exitl/entry-1)*100
+                pNlh = (exith/entry-1)*100
+                if pNlh>=takeProfit:
                     balance=balance*(((takeProfit-.08)/100)+1)
                     trades+=1
                     inTrade = False
                     inLong = False
-                if pNl<=stopLoss:
+                if pNll<=stopLoss:
                     balance=balance*(((stopLoss-.08)/100)+1)
                     trades+=1
                     inTrade = False
                     inLong = False
             if inShort == True:
-                exit = candle['low']
-                pNl = -(exit/entry-1)*100
-                if pNl>=takeProfit:
+                exitl = prices[i]['low']
+                exith = prices[i]['high']
+                pNll = -(exitl/entry-1)*100
+                pNlh = -(exith/entry-1)*100
+                if pNll>=takeProfit:
                     balance=balance*(((takeProfit-.08)/100)+1)
                     trades+=1
                     inTrade = False
                     inShort = False
-                if pNl<=stopLoss:
+                if pNlh<=stopLoss:
                     balance=balance*(((stopLoss-.08)/100)+1)
                     trades+=1
                     inTrade = False
@@ -91,22 +95,20 @@ def run():
     macda = macd()[0]
     signala = macd()[1]
     prices = req.prices
-    dataset=[{"RSI LENGTH":0,"TAKE PROFIT":0,"STOP LOSS":0,"BALANCE":0,"TRADES":0}]
     num = 0
+    dataset=[{"RSI LENGTH":0,"TAKE PROFIT":0,"STOP LOSS":0,"BALANCE":0,"TRADES":0}]
     for rsilength in range(5,20):
-        for takeProfit in range(0,20):
-            for stopLoss in range(-20,0):
-                if num%100==0:
-                    print(num)
-                balance = test(prices,rsi(rsilength)[num],macda[num],signala[num],takeProfit/10,stopLoss/10)
+        for takeProfit in range(1,40):
+            for stopLoss in range(-40,1):
+                print(num)
+                balance = test(prices,rsi(rsilength),macda,signala,takeProfit/10,stopLoss/10)
                 if balance[0]>=dataset[0]['BALANCE']:
                     dataset.append({"RSI LENGTH":rsilength,"TAKE PROFIT":takeProfit,"STOP LOSS":stopLoss,"BALANCE":balance[0],"TRADES":balance[1]})
                     dataset.sort(key=sorter)
                     if len(dataset)>50:
                         dataset.pop(0)
                 num+=1
-    print(dataset)
-
+    print("Michael is obese and we need to code thge email thingy rn ASAP Rocky type beat")
     with open("Z:\github\data.json", "w") as write_file:
         json.dump(dataset, write_file)
     j=0
