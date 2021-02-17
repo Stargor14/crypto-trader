@@ -143,17 +143,17 @@ def run():
     rsil = rsilow(14)
     rsia = rsicur(14)
     num = 0
-    runs = 6*2*25*7
+    runs = 3*2*3*2
     rsilength = 14
-    dataset=[{"TAKE PROFITL":0,"STOP LOSSL":0,"TAKE PROFITS":0,"STOP LOSSS":0,"BALANCE":0,"TRADES":0}]
+    dataset=[{"TAKE PROFITL":0,"STOP LOSSL":0,"TAKE PROFITS":0,"STOP LOSSS":0,"BALANCE":0,"TRADES":0,"SHORTG":0,"SHORTB":0,"LONGG":0,"LONGB":0}]
     takeProfitl = 0
     stopLossl = -0
     takeProfith = 0
     stopLossh = -0
     for takeProfitl in range(49,52):
-        for stopLossl in range(-15,-10):
-            for takeProfits in range(48,55):
-                for stopLosss in range(-13,-8):
+        for stopLossl in range(-12,-10):
+            for takeProfits in range(49,52):
+                for stopLosss in range(-12,-10):
                     if num%10==0 and num>0:
                         print(f"{num}/{runs} Expected time remaining: {round((runs-num)*runtime,1)} seconds")
                     tic = time.perf_counter()
