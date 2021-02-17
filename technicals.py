@@ -1,7 +1,6 @@
 import req
 import analysis
 import math
-import pandas_datareader as pdr
 import pandas
 rsilength = 10
 devlength = 100
