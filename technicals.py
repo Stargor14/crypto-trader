@@ -19,9 +19,9 @@ def rsi():
     down[down > 0] = 0
     roll_up1 = up.ewm(span=rsilength).mean()
     roll_down1 = down.abs().ewm(span=rsilength).mean()
-    RS1 = roll_up1 / roll_down1
-    RSI1 = 100.0 - (100.0 / (1.0 + RS1))
-    return RSI1[len(prices)-1]
+    rsia = roll_up1 / roll_down1
+    rsia = 100.0 - (100.0 / (1.0 + rsia))
+    return rsia[len(prices)-1]
 
 def macd():
     prices=list(reversed(req.prices))
