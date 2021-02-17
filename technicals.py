@@ -95,17 +95,17 @@ def run():
     rsia = rsicur(14)
     prices = req.prices
     num = 0
-    runs = 12*2*12*2
+    runs = 65*20*65*20
     rsilength = 14
     dataset=[{"TAKE PROFITL":0,"STOP LOSSL":0,"TAKE PROFITS":0,"STOP LOSSS":0,"BALANCE":0,"TRADES":0,"SHORTG":0,"SHORTB":0,"LONGG":0,"LONGB":0}]
     takeProfitl = 0
     stopLossl = -0
     takeProfith = 0
     stopLossh = -0
-    for takeProfitl in range(40,42):
-        for stopLossl in range(-10,-8):
-            for takeProfits in range(38,48):
-                for stopLosss in range(-17,-10):
+    for takeProfitl in range(5,70):
+        for stopLossl in range(-20,0):
+            for takeProfits in range(5,70):
+                for stopLosss in range(-20,0):
                     if num%10==0 and num>0:
                         print(f"{num}/{runs} Expected time remaining: {round((runs-num)*runtime,1)} seconds")
                     tic = time.perf_counter()
