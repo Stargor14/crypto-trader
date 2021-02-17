@@ -12,7 +12,7 @@ global client
 client = Client(apikey, secretkey)
 
 global hlength
-hlength = 100
+hlength = 200
 global prices
 prices = []
 
