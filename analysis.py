@@ -8,8 +8,8 @@ global stopLossl
 global takeProfitl
 global entryl
 global exitl
-global entryh
-global exith
+global entrys
+global exits
 global primeds
 global primedl
 
@@ -21,8 +21,8 @@ stopLossl = -1*(float(input("Stop Loss Long%: ")))
 takeProfitl = float(input("Take Profit Long %: "))
 entryl = 1
 exitl = 1
-entryh = 1
-exith = 1
+entrys = 1
+exits = 1
 primeds = False
 primedl = False
 
@@ -35,8 +35,8 @@ def run(prices,rsi,macd,signal,row):
     global takeProfitl
     global entryl
     global exitl
-    global entryh
-    global exith
+    global entrys
+    global exits
     global primeds
     global primedl
     rsimax = 70
@@ -44,7 +44,7 @@ def run(prices,rsi,macd,signal,row):
 
     #enter conditions
     if inShort == False:
-        if rsi[row]>=rsimax:
+        if rsi>=rsimax:
             primeds = True
         if primeds == True and signal>macd and rsi<=rsimax:
             entrys = prices[row]['close']
