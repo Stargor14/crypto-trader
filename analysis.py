@@ -1,37 +1,42 @@
 import broker
 import json
-global inTrade
 global inShort
 global inLong
-global Sstoploss
-global StakeProfit
-global Lstoploss
-global LtakeProfit
-global entry
-global exit
+global stopLosss
+global takeProfits
+global stopLossl
+global takeProfitl
+global entryl
+global exitl
+global entryh
+global exith
 global primeds
 global primedl
 
-inTrade = False
 inShort = False
 inLong = False
-stopLoss = -1*(float(input("Stop Loss %: ")))
-takeProfit = float(input("Take Profit %: "))
-entry = 1
-exit = 1
+stopLosss = -1*(float(input("Stop Loss Short%: ")))
+takeProfits = float(input("Take Profit Short%: "))
+stopLossl = -1*(float(input("Stop Loss Long%: ")))
+takeProfitl = float(input("Take Profit Long %: "))
+entryl = 1
+exitl = 1
+entryh = 1
+exith = 1
 primeds = False
 primedl = False
 
 def run(prices,rsi,macd,signal,row):
-    global inTrade
     global inShort
     global inLong
-    global Sstoploss
-    global StakeProfit
-    global Lstoploss
-    global LtakeProfit
-    global entry
-    global exit
+    global stopLosss
+    global takeProfits
+    global stopLossl
+    global takeProfitl
+    global entryl
+    global exitl
+    global entryh
+    global exith
     global primeds
     global primedl
     rsimax = 70
