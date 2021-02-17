@@ -151,9 +151,9 @@ def run():
     takeProfith = 0
     stopLossh = -0
     for takeProfitl in range(49,52):
-        for stopLossl in range(-15,-5):
-            for takeProfits in range(46,60):
-                for stopLosss in range(-15,-5):
+        for stopLossl in range(-15,-10):
+            for takeProfits in range(48,55):
+                for stopLosss in range(-13,-8):
                     if num%10==0 and num>0:
                         print(f"{num}/{runs} Expected time remaining: {round((runs-num)*runtime,1)} seconds")
                     tic = time.perf_counter()
