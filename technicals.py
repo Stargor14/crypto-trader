@@ -4,30 +4,6 @@ import pandas
 import json
 import time
 
-def rsihigh(rsilength):
-    prices = req.prices
-    df = pandas.DataFrame(prices)['high']
-    delta = df.diff()
-    up, down = delta.copy(), delta.copy()
-    up[up < 0] = 0
-    down[down > 0] = 0
-    roll_up1 = up.ewm(span=rsilength).mean()
-    roll_down1 = down.abs().ewm(span=rsilength).mean()
-    RS1 = roll_up1 / roll_down1
-    RSI1 = 100.0 - (100.0 / (1.0 + RS1))
-    return RSI1
-def rsilow(rsilength):
-    prices = req.prices
-    df = pandas.DataFrame(prices)['low']
-    delta = df.diff()
-    up, down = delta.copy(), delta.copy()
-    up[up < 0] = 0
-    down[down > 0] = 0
-    roll_up1 = up.ewm(span=rsilength).mean()
-    roll_down1 = down.abs().ewm(span=rsilength).mean()
-    RS1 = roll_up1 / roll_down1
-    RSI1 = 100.0 - (100.0 / (1.0 + RS1))
-    return RSI1
 def rsicur(rsilength):
     prices = req.prices
     df = pandas.DataFrame(prices)['close']
@@ -40,22 +16,7 @@ def rsicur(rsilength):
     RS1 = roll_up1 / roll_down1
     RSI1 = 100.0 - (100.0 / (1.0 + RS1))
     return RSI1
-def macdhigh():
-    prices=req.prices
-    df = pandas.DataFrame(prices)['high']
-    exp1 = df.ewm(span=12, adjust=False).mean()
-    exp2 = df.ewm(span=26, adjust=False).mean()
-    macd = exp1 - exp2
-    signal = macd.ewm(span=9, adjust=False).mean()
-    return macd,signal
-def macdlow():
-    prices=req.prices
-    df = pandas.DataFrame(prices)['low']
-    exp1 = df.ewm(span=12, adjust=False).mean()
-    exp2 = df.ewm(span=26, adjust=False).mean()
-    macd = exp1 - exp2
-    signal = macd.ewm(span=9, adjust=False).mean()
-    return macd,signal
+
 def macdcur():
     prices=req.prices
     df = pandas.DataFrame(prices)['close']
@@ -64,14 +25,14 @@ def macdcur():
     macd = exp1 - exp2
     signal = macd.ewm(span=9, adjust=False).mean()
     return macd,signal
-def test(prices,rsih,rsil,rsia,macdh,signalh,macdl,signall,macda,signala,takeProfits,stopLosss,takeProfitl,stopLossl):
+def test(prices,rsia,macda,signala,takeProfits,stopLosss,takeProfitl,stopLossl):
     primeds = False
     primedl = False
     inLong = False
     inShort = False
     balance = 100
-    rsimax = 70
-    rsimin =30
+    rsimax = 60
+    rsimin =40
     trades=0
     shortg =0
     longg =0
@@ -93,9 +54,6 @@ def test(prices,rsih,rsil,rsia,macdh,signalh,macdl,signall,macda,signala,takePro
                 entryl = prices[i]['close']
                 inLong = True
                 primedl = False
-        if 45<rsia[i]<55:
-            primedl = False
-            primeds = False
         #close conditions
         exitl = prices[i]['low']
         exith = prices[i]['high']
@@ -132,16 +90,10 @@ def test(prices,rsih,rsil,rsia,macdh,signalh,macdl,signall,macda,signala,takePro
 def sorter(i):
     return i['BALANCE']
 def run():
-    macdl = macdlow()[0]
-    signall = macdlow()[1]
-    macdh = macdhigh()[0]
-    signalh = macdhigh()[1]
     macda = macdcur()[0]
     signala = macdcur()[1]
-    prices = req.prices
-    rsih = rsihigh(14)
-    rsil = rsilow(14)
     rsia = rsicur(14)
+    prices = req.prices
     num = 0
     runs = 12*2*12*2
     rsilength = 14
@@ -150,14 +102,14 @@ def run():
     stopLossl = -0
     takeProfith = 0
     stopLossh = -0
-    for takeProfitl in range(40,52):
-        for stopLossl in range(-15,-5):
-            for takeProfits in range(30,52):
-                for stopLosss in range(-15,-5):
+    for takeProfitl in range(40,42):
+        for stopLossl in range(-10,-8):
+            for takeProfits in range(38,48):
+                for stopLosss in range(-17,-10):
                     if num%10==0 and num>0:
                         print(f"{num}/{runs} Expected time remaining: {round((runs-num)*runtime,1)} seconds")
                     tic = time.perf_counter()
-                    balance = test(prices,rsih,rsil,rsia,macdh,signalh,macdl,signall,macda,signala,takeProfits/10,stopLosss/10,takeProfitl/10,stopLossl/10)
+                    balance = test(prices,rsia,macda,signala,takeProfits/10,stopLosss/10,takeProfitl/10,stopLossl/10)
                     if balance[0]>=dataset[0]['BALANCE']:
                         dataset.append({"TAKE PROFITL":takeProfitl,"STOP LOSSL":stopLossl,"TAKE PROFITS":takeProfits,"STOP LOSSS":stopLosss,"BALANCE":balance[0],"TRADES":balance[1], "SHORTG":balance[2], "SHORTB":balance[3], "LONGG":balance[4], "LONGB":balance[5]})
                         dataset.sort(key=sorter)
