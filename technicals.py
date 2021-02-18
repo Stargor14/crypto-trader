@@ -25,6 +25,7 @@ def macdcur():
     macd = exp1 - exp2
     signal = macd.ewm(span=9, adjust=False).mean()
     return macd,signal
+
 def test(prices,rsia,macda,signala,takeProfits,stopLosss,takeProfitl,stopLossl):
     primeds = False
     primedl = False
