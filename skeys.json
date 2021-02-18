@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "crypto-trader-304615",
+  "private_key_id": "ac6b52572f86be1deff31821eee9bb355fe55f52",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDVKdN/aBlyFchY\nfUZ7bk5NC+qCm19rvdQ0yXPH+vlc1PELoYa9Q6ufQLM6nK1jgvgibRti3Yhm1AuY\nwkaMdmo2hCO1MhfpeRf0Bvz9czq9pjukLqcYwrpvDIGQRYDzr+e2Yr1QNU4Yr4Ne\ncsKpqjGmdjRFFuEmai8NNhzig1eyGNgKbthk5IlO5sXB0XcRVubWXPdLSPIwkrAF\nNxihw1eZRVd20vBdiI1ViVXx1v02zpLYDcw2lWiC56XB/1xjUya9/LRJ/1KTQZRz\nWCM85GTsB3GRZMDDoZek3/KrGC8hKsY3jhVJkTXBVyAx3TpPdZTPm0O4DNM3bCK8\nQrB9XUjvAgMBAAECggEAB98yJhVXdmtJgvZCLd+GWSAK7Zg3r0hLJHvmbUjEzRUF\npcyCp+cIDBFQM4Acgxbce2D66IbBbJK0e7qvVXnJNSQu5JhQYiXZQmcm3P4HxrMm\nprFP9TRTvQAbbl/l6DN8/Uyq+XuBqJwd4AhuGeSxtEtoy/H3wWE23zUG+HJ2dAD9\n8aSFZu4Zed10oNl3TcXKb3O+tzLn6eUi3l6e+hrcwF4TzOmuEMJ+oPcCrtxiryl+\nDVekfVp6NVzGVFwBdXD1GhlDK0Eu8eyVP+riXptGXc8f83nS++t36JL35ZE/hW0O\nkkN/dRv7Ym3oQ9+mqKs5MZ7kaDLsxJtNOQ9Sj9C5qQKBgQD/uaz/LaVR33evFMzI\ngpvk0RmiLod+gqEqmqzeMSdiAN+EV1Uu7xVmPzA9lpxcseq5K2nnOiw5iNNokqPc\ndvkoj9ItPRZfAh7UF+rSZzlNMfV0CNQb6Zzy9AF5Gog/gPBhevXI//vT8MEN/gtC\n/DTbxbZUKomyqvWB9G7NEMOtEwKBgQDVZHIm3xUIQ0TaTwlctCTpDYQB74tozjib\nUmRt8I1bM3EVK7tMcEX8xTwLO4f5/YUYJGlP57l4yI5sEnHsIKVKYC5UDchJqFRd\nAFbhx+8RQ/424qWU0mWNeqPTL2xNGmxcz9bBuDiw3vDhdnJvn2HIKPZX9zClbqXz\nA+Su8c48NQKBgFyKMJRXTFAIciMlf8W/nfJ7yK7r75RUaUYlmxD88KeCcWBOykCl\nvDS4ARkIe6T/rVU85KIMZxya6wYYqruJQjjvcrt0M7hF6CoQTaW+PPo2bgCDgV5o\nd6djrXTJqSxx2IsuF+uY1uSnZvVNTX38DpTJQ2XJzvKc8yMH9WC4BFeJAoGBALBz\nzrC15v5eIaEjmeo+TAcqVe4D1pNjcwt8pe8C6uBvOSL4dnhOnpDVx0DCiT3+lP/R\nnAOm6Ycm0B4tYmaO2B8YSTbX7rZ5qsj8bttkKBtuzdc0sxbMo4zJzI3kuPlI0DIu\n6rZlTvtyXl0RRK9oa8LHnGxAyskBJdg9b+v5pz/BAoGBAJs8T2sjqzTIf6rvnn91\nhQOPpsmu/gA1Sg5DBuhxq5QLrIHPq8/K3MrWYLRx5HIOUkp/fk6h6llBAHi3NtqP\nnLORl8PYEbFBA/wM/cFoRni0nTEDGnzkqXt/cx1KEH+gm+k+auwWkp1r15Mffpi1\n+jJvF5KvxAgEx9/iGB5nWsyL\n-----END PRIVATE KEY-----\n",
+  "client_email": "crypto-trader@crypto-trader-304615.iam.gserviceaccount.com",
+  "client_id": "110364888602066772791",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/crypto-trader%40crypto-trader-304615.iam.gserviceaccount.com"
+}
