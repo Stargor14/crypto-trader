@@ -1,33 +1,14 @@
 import req
 import analysis
 import math
-from google.oauth2 import service_account
-from googleapiclient.discovery import build
-from google_auth_oauthlib.flow import InstalledAppFlow
-from google.auth.transport.requests import Request
-import csv
 import pandas
 import matplotlib.pyplot as plt
 import broker
 
-SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
-SERVICE_ACCOUNT_FILE = 'Z:\github\skeys.json'
-SPREADSHEET_ID = '1z0_KbA4kywx0P6K08PaK0oCaeRkpts1RO-si7BpFUvs'
-
-credentials = None
-credentials = service_account.Credentials.from_service_account_file(
-        SERVICE_ACCOUNT_FILE, scopes=SCOPES)
-service = build('sheets', 'v4', credentials=credentials)
-sheet = service.spreadsheets()
-global rsilength
-rsilength = int(input("RSI Length: "))
-devlength = 100
-
 global row
 row = 0
+
 def rsi():
-    global row
-    global rsilength
     prices = req.prices
     df = pandas.DataFrame(prices)['close']
     delta = df.diff()
@@ -35,12 +16,18 @@ def rsi():
     up, down = delta.copy(), delta.copy()
     up[up < 0] = 0
     down[down > 0] = 0
-    roll_up1 = up.ewm(span=rsilength).mean()
-    roll_down1 = down.abs().ewm(span=rsilength).mean()
+    roll_up1 = up.ewm(span=14).mean()
+    roll_down1 = down.abs().ewm(span=14).mean()
     RS1 = roll_up1 / roll_down1
     RSI1 = 100.0 - (100.0 / (1.0 + RS1))
     print(RSI1)
     return RSI1
+
+def ema(length):
+    prices = req.prices
+    df = pandas.DataFrame(prices)['close']
+    ema = df.ewm(span=length).mean()
+    return ema
 
 def macd():
     prices=req.prices
@@ -53,6 +40,7 @@ def macd():
 
 def run():
     global row
+
     if input("Graph?") != "":
         graph = True
     else:
@@ -68,7 +56,6 @@ def run():
     if row==len(prices)-99 and graph ==True:
         trades = broker.trades
         macda.plot(label='BTC MACD', color='g')
-        rsia.plot(label='RSI',color='b')
         ax = signala.plot(label='Signal Line', color='r')
         df.plot(ax=ax, secondary_y=True, label='BTC')
         ax.set_ylabel('MACD')
