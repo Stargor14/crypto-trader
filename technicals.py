@@ -50,10 +50,10 @@ def run():
     signala = macd()[1]
     rsia = rsi()
     df = pandas.DataFrame(prices)['close']
-    while row<=len(prices)-100:
+    while row<=len(prices)-1:
         analysis.run(prices,rsia[row],macda[row],signala[row],row)
         row+=1
-    if row==len(prices)-99 and graph ==True:
+    if row==len(prices) and graph == True:
         trades = broker.trades
         macda.plot(label='BTC MACD', color='g')
         ax = signala.plot(label='Signal Line', color='r')

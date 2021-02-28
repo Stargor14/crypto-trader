@@ -30,7 +30,7 @@ def run():
         global ms
         backtime = ms-86400000*int(input("Start days ago: "))
         forwardtime = ms-86400000*int(input("End days ago: "))
-        klines = client.get_historical_klines("BTCUSDT", Client.KLINE_INTERVAL_15MINUTE,str(backtime),str(forwardtime))
+        klines = client.get_historical_klines("XRPUSDT", Client.KLINE_INTERVAL_1DAY,str(backtime),str(forwardtime))
         a = []
         for i in klines:
             a.append({"time":i[0], "open":float(i[1]), "close":float(i[4]),"low":float(i[3]), "high":float(i[2])})
