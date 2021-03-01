@@ -46,15 +46,14 @@ def backtester():
         interval = Client.KLINE_INTERVAL_30MINUTE
     elif (interval == 60):
         interval = Client.KLINE_INTERVAL_1HOUR
-
     epoch = datetime.datetime.utcfromtimestamp(0)
     ms = (datetime.datetime.now() - epoch).total_seconds() * 1000.0
     backtime = ms-86400000*int(input("Start days ago: "))
-    forwardtime = backtime+86400000*int(input("Test Length: "))
-
-    p = req.Prices(req.past_request(interval,backtime,forwardtime),interval)
-    print(p.prices)
-
+    p = req.Prices(req.past_request(interval,backtime),interval)
+    macd = tech.macd(p.prices)[0]
+    signal = tech.macd(p.prices)[1]
+    for i in range(len(p.prices)):
+        print(anal.macd.check(macd[i],signal[i]))
 type = int(input("1 => live, \n2 => paper, \n3 => backtester\n"))
 
 if (type == 1):

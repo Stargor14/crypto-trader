@@ -3,12 +3,11 @@ class macd:
     periodSlow = 26
     value = 25
     confidence = 0
-    def check(macd,check,position):
-        print("check")
-        if (macd > signal and position == "short"):
-            return "buy"
-        if (macd < signal and position == "long"):
-            return "sell"
+    def check(macd,signal):
+        if (macd > signal):
+            return macd,signal
+        if (macd < signal):
+            return macd,signal
 
 class rsi:
     rsiHigh = 70
@@ -28,6 +27,6 @@ class macdrsi:
     confidence = 0
     def check(macd,signal,rsi):
         if (macd.check() == "buy" and rsi>rsiHigh):
-            confidence
+            return "buy"
         if (macd.check() == "sell" and rsi<rsiLow):
             return "sell"
