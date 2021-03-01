@@ -7,4 +7,3 @@ with open('keys.json','r') as r:
     api_secret = data['secret']
 
 client = Client(api_key, api_secret)
-print(api_key)
