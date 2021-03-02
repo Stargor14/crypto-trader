@@ -1,13 +1,17 @@
+from enum import Enum
+class types(Enum):
+    Long = 1
+    Short = 2
+    Closed = 3
+
 class macd:
-    periodFast = 12
-    periodSlow = 26
     value = 25
     confidence = 0
     def check(macd,signal):
         if (macd > signal):
-            return macd,signal
+            return "buy"
         if (macd < signal):
-            return macd,signal
+            return "sell"
 
 class rsi:
     rsiHigh = 70
@@ -25,8 +29,8 @@ class macdrsi:
     rsiLow = 30
     value = 25
     confidence = 0
-    def check(macd,signal,rsi):
-        if (macd.check() == "buy" and rsi>rsiHigh):
+    def check(macd,signal,rsi,postion):
+        if (macd.check(macd,signal) == "buy" and rsi<rsiLow):
             return "buy"
-        if (macd.check() == "sell" and rsi<rsiLow):
+        if (macd.check(macd,signal) == "sell" and rsi>rsiHigh):
             return "sell"
