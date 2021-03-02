@@ -17,7 +17,6 @@ import tech
 import json
 import datetime
 from binance.client import Client
-from enum import Enum
 
 with open('keys.json','r') as r:
     data  = json.load(r)
@@ -26,11 +25,6 @@ with open('keys.json','r') as r:
 
 global client
 client = Client(api_key, api_secret)
-
-class types(Enum):
-    Long = 1
-    Short = 2
-    Closed = 3
 
 def live():
     return
@@ -52,6 +46,8 @@ def backtester():
         interval = Client.KLINE_INTERVAL_30MINUTE
     elif (interval == 60):
         interval = Client.KLINE_INTERVAL_1HOUR
+    else:
+        return
 
     epoch = datetime.datetime.utcfromtimestamp(0)
     ms = (datetime.datetime.utcnow() - epoch).total_seconds() * 1000.0
@@ -66,18 +62,32 @@ def backtester():
     #backtesting starts here
     b = broke.backtester()
     position = "init"
+    pnl = 0
     for i in range(len(p.prices)):
-        if anal.macd.check(macd[i],signal[i])=="buy" and (position == "sell" or position =="init"):
+        if position == "buy":
+            pnl = (p.prices[i]['close']/b.entry-1)*100
+        if position == "sell":
+            pnl = (b.entry/p.prices[i]['close']-1)*100
+        if position == "init":
+            pnl = 0
+        if anal.macd.check(macd[i],signal[i],pnl)=="buy" and (position == "sell" or position =="init"):
             if(position!="init"):
                 b.close(p.prices[i]['close'],"sell")
             b.enter(p.prices[i]['close'])
             position = "buy"
-        if anal.macd.check(macd[i],signal[i])=="sell" and (position == "buy" or position =="init"):
+        if anal.macd.check(macd[i],signal[i],pnl)=="sell" and (position == "buy" or position =="init"):
             if(position!="init"):
                 b.close(p.prices[i]['close'],"buy")
             b.enter(p.prices[i]['close'])
             position = "sell"
-    print(b.balance, b.trades)
+        if anal.macd.check(macd[i],signal[i],pnl)=="close" and position == "buy":
+            b.close(b.entry*.99,"buy")
+            position = "init"
+        if anal.macd.check(macd[i],signal[i],pnl)=="close" and position == "sell":
+            b.close(b.entry*1.01,"sell")
+            position = "init"
+    print(f"Market: {(p.prices[-1]['close']/p.prices[0]['close']-1)*100}")
+    print(f"Balance: {b.balance} Trades: {b.trades} P/T {(b.balance-100)/b.trades}")
 
 type = int(input("1 => live, \n2 => paper, \n3 => backtester: "))
 

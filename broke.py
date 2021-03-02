@@ -1,9 +1,3 @@
-from enum import Enum
-class types(Enum):
-    Long = 1
-    Short = 2
-    Closed = 3
-
 class paper:
     def __init__(self):
         self.entry = 0
@@ -24,7 +18,7 @@ class backtester:
     def enter(self, price):
         self.entry = price
         return
-    def close(self, price,type):
+    def close(self,price,type):
         self.exit = price
         if(type == "sell"):
             self.balance*=self.entry/self.exit-.0008

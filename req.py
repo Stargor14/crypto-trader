@@ -27,7 +27,7 @@ def live_request(interval):
 def past_request(interval,backtime,forwardtime):
     global client
     #determines current time in milliseconds, subtracts x amount of millsecods away and starts there
-    klines = client.get_historical_klines("BNBUSDT", interval, str(backtime),str(forwardtime))
+    klines = client.get_historical_klines("BTCUSDT", interval, str(backtime),str(forwardtime))
     a = []
     for i in klines:
         a.append({"time":i[0], "open":float(i[1]), "close":float(i[4]),"low":float(i[3]), "high":float(i[2])})
