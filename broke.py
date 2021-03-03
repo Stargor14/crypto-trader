@@ -1,4 +1,4 @@
-class paper:
+class live:
     def __init__(self):
         self.entry = 0
         self.exit = 0
@@ -10,8 +10,8 @@ class paper:
 
 class backtester:
     def __init__(self):
-        self.entry = 1
-        self.exit = 1
+        self.entry = 0
+        self.exit = 0
         self.balance = 100
         self.trades = 0
         return
@@ -21,9 +21,9 @@ class backtester:
     def close(self,price,type):
         self.exit = price
         if(type == "sell"):
-            self.balance*=self.entry/self.exit-.0008
+            self.balance*=self.entry/self.exit-.001
             self.trades+=1
         if(type == "buy"):
-            self.balance*=self.exit/self.entry-.0008
+            self.balance*=self.exit/self.entry-.001
             self.trades+=1
         return

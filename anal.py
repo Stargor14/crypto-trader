@@ -1,11 +1,11 @@
 class macd:
     def check(macd,signal,pnl):
-        if (pnl<=-1):
+        if (pnl<=-3):
             return "close"
         if (macd > signal):
             return "buy"
         if (macd < signal):
-            return "sell"        
+            return "sell"
 class rsi:
     rsiHigh = 70
     rsiLow = 30
