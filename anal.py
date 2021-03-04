@@ -1,6 +1,6 @@
 class macd:
-    def check(macd,signal,pnl):
-        if (pnl<=-3):
+    def check(macd,signal,pnl,stopLoss):
+        if (pnl<=-stopLoss):
             return "close"
         if (macd > signal):
             return "buy"
