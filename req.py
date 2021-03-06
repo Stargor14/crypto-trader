@@ -37,7 +37,7 @@ def past_request(interval):
     global type
     #determines current time in milliseconds, subtracts x amount of millsecods away and starts there
     if type == '0':
-        klines = client.get_historical_klines(pair, interval, '1 Day Ago UTC')
+        klines = client.get_historical_klines(pair, interval, '7 Day Ago UTC')
         a = []
         for i in klines:
             a.append({"time":i[0], "open":float(i[1]), "close":float(i[4]),"low":float(i[3]), "high":float(i[2])})

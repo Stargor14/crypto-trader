@@ -239,8 +239,8 @@ def machine_learn():
     p5 = []
     j=-1
     for i in range(len(p_1.prices)):
-        if((i+1)%5==0):
-            j+=1 #figure out hwo to spread candle vaklues to fit 1440
+        if((i)%5==0):
+            j+=1
         p5.append(p_5.prices[j]['close'])
         p5dict = {'close':p5}
     p5=pd.DataFrame(p5dict)
@@ -249,8 +249,8 @@ def machine_learn():
     p15 = []
     j=-1
     for i in range(len(p_1.prices)):
-        if((i+1)%15==0):
-            j+=1 #figure out hwo to spread candle vaklues to fit 1440
+        if((i)%15==0):
+            j+=1
         p15.append(p_15.prices[j]['close'])
         p15dict = {'close':p15}
     p15=pd.DataFrame(p15dict)
@@ -259,26 +259,83 @@ def machine_learn():
     p60 = []
     j=-1
     for i in range(len(p_1.prices)):
-        if((i+1)%60==0):
-            j+=1 #figure out hwo to spread candle vaklues to fit 1440
+        if((i)%60==0):
+            j+=1
         p60.append(p_60.prices[j]['close'])
         p60dict = {'close':p60}
     p60=pd.DataFrame(p60dict)
 
     macd1 = tech.macd(p_1.prices)[0]
     macd5 = tech.macd(p_5.prices)[0]
+    md5 = []
+    j=-1
+    for i in range(len(macd1)):
+        if((i)%5==0):
+            j+=1
+        md5.append(macd5[j])
+    md5dict = {'macd5':md5}
+    macd5=pd.DataFrame(md5dict)
+
     macd15 = tech.macd(p_15.prices)[0]
+    md15 = []
+    j=-1
+    for i in range(len(macd1)):
+        if((i)%15==0):
+            j+=1
+        md15.append(macd15[j])
+    md15dict = {'macd15':md15}
+    macd15 = pd.DataFrame(md15dict)
+
     macd60 = tech.macd(p_60.prices)[0]
+    md60 = []
+    j=-1
+    for i in range(len(macd1)):
+        if((i)%60==0):
+            j+=1
+        md60.append(macd60[j])
+    md60dict = {'macd60':md60}
+    macd60 = pd.DataFrame(md60dict)
+
     signal1 = tech.macd(p_1.prices)[1]
     signal5 = tech.macd(p_5.prices)[1]
+    sig5 = []
+    j=-1
+    for i in range(len(signal1)):
+        if((i)%5==0):
+            j+=1
+        sig5.append(signal5[j])
+    signal5dict = {'signal5':sig5}
+    signal5 = pd.DataFrame(signal5dict)
+
     signal15 = tech.macd(p_15.prices)[1]
+    sig15 = []
+    j=-1
+    for i in range(len(signal1)):
+        if((i)%15==0):
+            j+=1
+        sig15.append(signal15[j])
+    signal15dict = {'signal15':sig15}
+    signal15 = pd.DataFrame(signal15dict)
+
     signal60 = tech.macd(p_60.prices)[1]
+    sig60 = []
+    j=-1
+    for i in range(len(signal1)):
+        if((i)%60==0):
+            j+=1
+        sig60.append(signal60[j])
+    signal60dict = {'signal60':sig60}
+    signal60 = pd.DataFrame(signal60dict)
 
-    macd = pd.DataFrame({'macd1':macd1,'macd5':macd5,'macd15':macd15,'macd60':macd60})
-    signal = pd.DataFrame({'signal1':signal1,'signal5':signal5,'signal15':signal15,'signal60':signal60})
-    df=pd.DataFrame({'price1min':p1['close'],'price5min':p5['close'],'price15min':p15['close'],'price60min':p60['close'],'macd1':macd['macd1'],'signal1':signal['signal1']})
-
+    macd = pd.DataFrame({'macd1':macd1,'macd5':macd5['macd5'],'macd15':macd15['macd15'],'macd60':macd60['macd60']})
+    signal = pd.DataFrame({'signal1':signal1,'signal5':signal5['signal5'],'signal15':signal15['signal15'],'signal60':signal60['signal60']})
+    df = pd.DataFrame({'price1min':p1['close'],'price5min':p5['close'],'price15min':p15['close'],'price60min':p60['close'],'macd1':macd['macd1'],'signal1':signal['signal1'],'macd5':macd['macd5'],'signal5':signal['signal5'],'macd15':macd['macd15'],'signal15':signal['signal15'],'macd60':macd['macd60'],'signal60':signal['signal60']})
+    for i in range(2000):
+        df.drop(index=i,inplace=True)
     print(df)
+    param = {'max_depth':2, 'eta':1, 'objective':'binary:logistic' }
+    num_round = 2
+    bst = xgb.train(param, df, num_round)
 machine_learn()
 '''
 type = int(input("1 => machine_learn, \n2 => paper, \n3 => backtester: "))
