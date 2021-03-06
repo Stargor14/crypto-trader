@@ -1,4 +1,5 @@
 from binance.client import Client
+import json
 with open('keys.json','r') as r:
     data  = json.load(r)
     api_key = data['public']
@@ -13,16 +14,15 @@ class live:
         self.exit = 0
         self.balance = 100
     def enter(seld,price,type):
+        global client
         self.entry = price
         if type == "buy":
-            global client
             balance = client.futures_account_balance()[0]['balance']
             print(balance)
             quantity = round((float(balance)/price)*1.5,3)
             print(f"Entered LONG at: {price}")
             client.futures_create_order(symbol='BTCUSDT',side="BUY",type="MARKET",quantity=quantity)
         if type == "sell":
-            global client
             balance = client.futures_account_balance()[0]['balance']
             print(balance)
             quantity = round((float(balance)/price)*1.5,3)

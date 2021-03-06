@@ -18,6 +18,14 @@ import json
 import datetime
 from binance.client import Client
 import time
+import xgboost as xgb
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import balanced_accuracy_score,roc_auc_score,make_scorer
+from sklearn.model_selection import GridSearchCV
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import plot_confusion_matrix
 
 with open('keys.json','r') as r:
     data  = json.load(r)
@@ -220,14 +228,51 @@ def backtester():
                     position = "closed"
             print(f"Market: {(p.prices[-1]['close']/p.prices[0]['close']-1)*100}")
             print(f"Balance: {b.balance} Trades: {b.trades} Stop Loss: {c}%")
-    #PROTOTYPE
-    if strategy == 1:
-        
 
-type = int(input("1 => live, \n2 => paper, \n3 => backtester: "))
+def machine_learn():
+    # ex. macd_1 = 1min MACD, macdroc1_1 = MACD ROC 1 candle 1 min
+    epoch = datetime.datetime.utcfromtimestamp(0)
+    ms = (datetime.datetime.utcnow() - epoch).total_seconds() * 1000.0
+
+    backtime = ms-(86400000*int(input("Start days ago: ")))
+    forwardtime = backtime+(86400000*int(input("Test length: ")))
+
+    interval = Client.KLINE_INTERVAL_1MINUTE
+    p_1 = req.Prices(req.past_request(interval,backtime,forwardtime),interval)
+    p1 = pd.DataFrame(p_1.prices)
+    interval = Client.KLINE_INTERVAL_5MINUTE
+    p_5 = req.Prices(req.past_request(interval,backtime,forwardtime),interval)
+    p5 = pd.DataFrame(p_5.prices)
+    j=0
+    for i in range(len(p_5.prices)):
+        if((i+1)%5==0):
+            j+=1 #figure out hwo to spread candle vaklues to fit 1440
+        p5[i] = p_5.prices[j]['close']
+    interval = Client.KLINE_INTERVAL_15MINUTE
+    p_15 = req.Prices(req.past_request(interval,backtime,forwardtime),interval)
+    p15 = pd.DataFrame(p_15.prices)
+    interval = Client.KLINE_INTERVAL_1HOUR
+    p_60 = req.Prices(req.past_request(interval,backtime,forwardtime),interval)
+    p60 = pd.DataFrame(p_60.prices)
+
+    macd1 = tech.macd(p_1.prices)[0]
+    macd5 = tech.macd(p_5.prices)[0]
+    macd15 = tech.macd(p_15.prices)[0]
+    macd60 = tech.macd(p_60.prices)[0]
+    signal1 = tech.macd(p_1.prices)[1]
+    signal5 = tech.macd(p_5.prices)[1]
+    signal15 = tech.macd(p_15.prices)[1]
+    signal60 = tech.macd(p_60.prices)[1]
+
+    macd = pd.DataFrame({'macd1':macd1,'macd5':macd5,'macd15':macd15,'macd60':macd60})
+    signal = pd.DataFrame({'signal1':signal1,'signal5':signal5,'signal15':signal15,'signal60':signal60})
+    df=pd.DataFrame({'price1min':p1['close'],'price5min':p5['close'],'price15min':p15['close'],'price60min':p60['close'],'macd1':macd['macd1'],'signal1':signal['signal1']})
+    print(df)
+
+type = int(input("1 => machine_learn, \n2 => paper, \n3 => backtester: "))
 
 if (type == 1):
-    live()
+    machine_learn()
 if (type == 2):
     paper()
 if (type == 3):
