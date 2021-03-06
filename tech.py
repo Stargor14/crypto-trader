@@ -25,7 +25,6 @@ def macd(prices):
     macd = exp1-exp2
     signal = macd.ewm(span=9, adjust=False).mean()
     return macd,signal
-
 def roc(data,interval):
     df = pd.DataFrame(data)
     return df.pct_change(periods=interval)

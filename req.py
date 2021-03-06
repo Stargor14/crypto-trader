@@ -1,6 +1,8 @@
 import json
 import datetime
 from binance.client import Client
+global type
+type = input("0 for new, else for old: ")
 
 with open('keys.json','r') as r:
     data  = json.load(r)
@@ -29,12 +31,43 @@ def live_request(interval):
         a.append({"open":float(i[1]), "close":float(i[4]),"low":float(i[3]), "high":float(i[2])})
     return a
 
-def past_request(interval,backtime,forwardtime):
+def past_request(interval):
     global client
     global pair
+    global type
     #determines current time in milliseconds, subtracts x amount of millsecods away and starts there
-    klines = client.get_historical_klines(pair, interval, str(backtime),str(forwardtime))
-    a = []
-    for i in klines:
-        a.append({"time":i[0], "open":float(i[1]), "close":float(i[4]),"low":float(i[3]), "high":float(i[2])})
+    if type == '0':
+        klines = client.get_historical_klines(pair, interval, '1 Day Ago UTC')
+        a = []
+        for i in klines:
+            a.append({"time":i[0], "open":float(i[1]), "close":float(i[4]),"low":float(i[3]), "high":float(i[2])})
+        if interval == Client.KLINE_INTERVAL_1MINUTE:
+            with open('jsons\data1.json','w') as r:
+                json.dump(a,r)
+        if interval == Client.KLINE_INTERVAL_5MINUTE:
+            with open('jsons\data5.json','w') as r:
+                json.dump(a,r)
+        if interval == Client.KLINE_INTERVAL_15MINUTE:
+            with open('jsons\data15.json','w') as r:
+                json.dump(a,r)
+        if interval == Client.KLINE_INTERVAL_1HOUR:
+            with open('jsons\data60.json','w') as r:
+                json.dump(a,r)
+    else:
+        if interval == Client.KLINE_INTERVAL_1MINUTE:
+            with open('jsons\data1.json','r') as r:
+                data  = json.load(r)
+                a = data
+        if interval == Client.KLINE_INTERVAL_5MINUTE:
+            with open('jsons\data5.json','r') as r:
+                data  = json.load(r)
+                a = data
+        if interval == Client.KLINE_INTERVAL_15MINUTE:
+            with open('jsons\data15.json','r') as r:
+                data  = json.load(r)
+                a = data
+        if interval == Client.KLINE_INTERVAL_1HOUR:
+            with open('jsons\data60.json','r') as r:
+                data  = json.load(r)
+                a = data
     return a

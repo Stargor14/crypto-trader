@@ -231,29 +231,39 @@ def backtester():
 
 def machine_learn():
     # ex. macd_1 = 1min MACD, macdroc1_1 = MACD ROC 1 candle 1 min
-    epoch = datetime.datetime.utcfromtimestamp(0)
-    ms = (datetime.datetime.utcnow() - epoch).total_seconds() * 1000.0
-
-    backtime = ms-(86400000*int(input("Start days ago: ")))
-    forwardtime = backtime+(86400000*int(input("Test length: ")))
-
     interval = Client.KLINE_INTERVAL_1MINUTE
-    p_1 = req.Prices(req.past_request(interval,backtime,forwardtime),interval)
+    p_1 = req.Prices(req.past_request(interval),interval)
     p1 = pd.DataFrame(p_1.prices)
     interval = Client.KLINE_INTERVAL_5MINUTE
-    p_5 = req.Prices(req.past_request(interval,backtime,forwardtime),interval)
-    p5 = pd.DataFrame(p_5.prices)
-    j=0
-    for i in range(len(p_5.prices)):
+    p_5 = req.Prices(req.past_request(interval),interval)
+    p5 = []
+    j=-1
+    for i in range(len(p_1.prices)):
         if((i+1)%5==0):
             j+=1 #figure out hwo to spread candle vaklues to fit 1440
-        p5[i] = p_5.prices[j]['close']
+        p5.append(p_5.prices[j]['close'])
+        p5dict = {'close':p5}
+    p5=pd.DataFrame(p5dict)
     interval = Client.KLINE_INTERVAL_15MINUTE
-    p_15 = req.Prices(req.past_request(interval,backtime,forwardtime),interval)
-    p15 = pd.DataFrame(p_15.prices)
+    p_15 = req.Prices(req.past_request(interval),interval)
+    p15 = []
+    j=-1
+    for i in range(len(p_1.prices)):
+        if((i+1)%15==0):
+            j+=1 #figure out hwo to spread candle vaklues to fit 1440
+        p15.append(p_15.prices[j]['close'])
+        p15dict = {'close':p15}
+    p15=pd.DataFrame(p15dict)
     interval = Client.KLINE_INTERVAL_1HOUR
-    p_60 = req.Prices(req.past_request(interval,backtime,forwardtime),interval)
-    p60 = pd.DataFrame(p_60.prices)
+    p_60 = req.Prices(req.past_request(interval),interval)
+    p60 = []
+    j=-1
+    for i in range(len(p_1.prices)):
+        if((i+1)%60==0):
+            j+=1 #figure out hwo to spread candle vaklues to fit 1440
+        p60.append(p_60.prices[j]['close'])
+        p60dict = {'close':p60}
+    p60=pd.DataFrame(p60dict)
 
     macd1 = tech.macd(p_1.prices)[0]
     macd5 = tech.macd(p_5.prices)[0]
@@ -267,8 +277,10 @@ def machine_learn():
     macd = pd.DataFrame({'macd1':macd1,'macd5':macd5,'macd15':macd15,'macd60':macd60})
     signal = pd.DataFrame({'signal1':signal1,'signal5':signal5,'signal15':signal15,'signal60':signal60})
     df=pd.DataFrame({'price1min':p1['close'],'price5min':p5['close'],'price15min':p15['close'],'price60min':p60['close'],'macd1':macd['macd1'],'signal1':signal['signal1']})
-    print(df)
 
+    print(df)
+machine_learn()
+'''
 type = int(input("1 => machine_learn, \n2 => paper, \n3 => backtester: "))
 
 if (type == 1):
@@ -277,3 +289,4 @@ if (type == 2):
     paper()
 if (type == 3):
     backtester()
+'''
