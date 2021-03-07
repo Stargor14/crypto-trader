@@ -1,7 +1,7 @@
 import pandas as pd
 
-def rsi(prices):
-    df = pd.DataFrame(prices)['close']
+def rsi(data):
+    df = pd.DataFrame(data)
     delta = df.diff()
     # Make the positive gains (up) and negative gains (down) Series
     up, down = delta.copy(), delta.copy()
@@ -13,8 +13,8 @@ def rsi(prices):
     rsi = 100.0 - (100.0 / (1.0 + rsi))
     return rsi
 
-def ema(prices,length):
-    df = pd.DataFrame(prices)['close']
+def ema(data,length):
+    df = pd.DataFrame(data)
     ema = df.ewm(span=length).mean()
     return ema
 

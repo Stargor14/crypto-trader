@@ -26,7 +26,9 @@ from sklearn.metrics import balanced_accuracy_score,roc_auc_score,make_scorer
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import plot_confusion_matrix
-import matplotlib
+from xgboost import plot_tree
+from xgboost import plot_importance
+import matplotlib.pyplot as plt
 
 with open('keys.json','r') as r:
     data  = json.load(r)
@@ -328,19 +330,37 @@ def machine_learn():
     signal60dict = {'signal60':sig60}
     signal60 = pd.DataFrame(signal60dict)
 
-    p1_change = tech.roc(p1['close'],-20)*100
-    p1_roc_5 = tech.roc(p1['close'],5)*100
-    p1_roc_15 = tech.roc(p1['close'],15)*100
+    p1_change = tech.roc(p1['close'],-5)*100
+    p1_roc = tech.roc(p1['close'],5)*100
+    p5_roc = tech.roc(p5['close'],5)*100
+    p15_roc = tech.roc(p15['close'],5)*100
+    p60_roc = tech.roc(p60['close'],5)*100
 
     macd = pd.DataFrame({'macd1':macd1,'macd5':macd5['macd5'],'macd15':macd15['macd15'],'macd60':macd60['macd60']})
     signal = pd.DataFrame({'signal1':signal1,'signal5':signal5['signal5'],'signal15':signal15['signal15'],'signal60':signal60['signal60']})
 
+    rsi1 = tech.rsi(p1['close'])
+    rsi5 = tech.rsi(p5['close'])
+    rsi15 = tech.rsi(p15['close'])
+    rsi60 = tech.rsi(p60['close'])
+
+    rsi1roc = tech.roc(rsi1,5)
+    rsi5roc = tech.roc(rsi5,5)
+    rsi15roc = tech.roc(rsi15,5)
+    rsi60roc = tech.roc(rsi60,5)
+
+    macdroc1 = tech.roc(macd1,5)
+    macdroc5 = tech.roc(macd5,5)
+    macdroc15 = tech.roc(macd15,5)
+    macdroc60 = tech.roc(macd60,5)
+
     diff = pd.DataFrame({'diff1':macd['macd1']-signal['signal1'],'diff5':macd['macd5']-signal['signal5'],'diff15':macd['macd15']-signal['signal15'],'diff60':macd['macd60']-signal['signal60']})
 
-    df = pd.DataFrame({'price1min':p1['close'],'price5min':p5['close'],'price15min':p15['close'],'price60min':p60['close'],'macd1':macd['macd1'],'signal1':signal['signal1'],'diff1':diff['diff1'],'macd5':macd['macd5'],'signal5':signal['signal5'],'diff5':diff['diff5'],'macd15':macd['macd15'],'signal15':signal['signal15'],'diff15':diff['diff15'],'macd60':macd['macd60'],'signal60':signal['signal60'],'diff60':diff['diff60'],'p1_change':p1_change['close']})
-
+    df = pd.DataFrame({'p1roc':p1_roc['close'],'p5roc':p5_roc['close'],'p15roc':p15_roc['close'],'p60roc':p60_roc['close'],'rsi1':rsi1['close'],'rsi5':rsi5['close'],'rsi15':rsi15['close'],'rsi60':rsi60['close'],'macd1':macd['macd1'],'signal1':signal['signal1'],'diff1':diff['diff1'],'macdroc1':macdroc1['close'],'macd5':macd['macd5'],'signal5':signal['signal5'],'diff5':diff['diff5'],'macd15':macd['macd15'],'signal15':signal['signal15'],'diff15':diff['diff15'],'macd60':macd['macd60'],'signal60':signal['signal60'],'diff60':diff['diff60'],'p1_change':p1_change['close']})
     X = df.drop('p1_change',axis=1).copy()
     y = df['p1_change'].copy()
+    X.fillna(0, inplace=True)
+    y.fillna(0, inplace=True)
     X_train = X.copy()
     X_test = X.copy()
     y_train = y.copy()
@@ -351,17 +371,56 @@ def machine_learn():
     for i in range(round(len(X)/2),len(X)):
         X_test.drop(index=i,inplace=True)
         y_test.drop(index=i,inplace=True)
-    print(X_train)
-    clf_xgb = xgb.XGBClassifier(objective='binary:logistic',seed=42)
+    label = []
+    for i in range(len(df)):
+        label.append(i)
+    clf_xgb = xgb.XGBClassifier(objective='binary:logistic',missing=np.nan,seed=42)
     clf_xgb.fit(X_train,y_train,verbose=True)
     print("Done fitting!")
-    print(clf_xgb.predict(X_test))
-    pd.set_option("display.max_rows", 100, "display.max_columns", 100)
-    #comparison = pd.DataFrame({'predictions':preds,'actual':y_test})
-    #print(preds)
-    '''
-    print(comparison)
-    comparison = (preds / y_test)*100
-    print(comparison.mean())
-    '''
+    preds = clf_xgb.predict(X_test)
+    comparison = pd.DataFrame({'prediction':preds,'actual':y_test})
+    pd.set_option("display.max_rows", None, "display.max_columns", None)
+    with open('jsons\predictions.json','w') as r:
+        json.dump(comparison.to_json(),r)
+    #plot_importance(clf_xgb,importance_type='gain')
+    plot_tree(clf_xgb,num_trees=10)
+    plt.show()
+def read():
+    with open('jsons\predictions.json','r') as r:
+        data = json.load(r)
+        comparison = pd.read_json(path_or_buf=data)
+    for i in range(len(comparison['prediction'])):
+        if comparison['prediction'][i] > comparison['actual'][i] > 0:
+            comparison['prediction'][i] = comparison['actual'][i]
+        if comparison['prediction'][i] < comparison['actual'][i] < 0:
+            comparison['prediction'][i] = comparison['actual'][i]
+        if comparison['prediction'][i] < -comparison['actual'][i] and comparison['actual'][i] > 0:
+            comparison['prediction'][i] = -comparison['actual'][i]
+        if comparison['prediction'][i] > -comparison['actual'][i] and comparison['actual'][i] < 0:
+            comparison['prediction'][i] = -comparison['actual'][i]
+    comp = (comparison['prediction']/comparison['actual'])*100
+    print(f"{round(comp.mean()/2+50,2)}% accuracy")
 machine_learn()
+read()
+'''
+dtrain = xgb.DMatrix(df,label=label)
+param = {'objective':'binary:logistic','nthread':-1,'subsample':1}
+num_round = 1000
+bst = xgb.train(param, dtrain, num_round)
+print(bst.get_fscore())
+j=0
+for i in p1_roc['close']:
+    if i>0.5 or i<-0.5:
+        print(i,j)
+        j+=1
+'''
+'''
+type = int(input("1 => machine_learn, \n2 => paper, \n3 => backtester: "))
+
+if (type == 1):
+    machine_learn()
+if (type == 2):
+    paper()
+if (type == 3):
+    backtester()
+'''
